@@ -17,4 +17,4 @@ sh bootstrap.exclude.sh
 
 # Recomendations
 
-If you are going to use this setup please make sure to backup all dotfile files. Comments have been added so you can customize it.
+If you are going to use this setup please make sure to backup all your dotfile files first. Comments have been added so you can customize it.
