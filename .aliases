@@ -1,0 +1,52 @@
+# ---------------------------------
+# Common aliases
+# ---------------------------------
+
+alias home='cd ~'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias '?=man'
+alias ls='ls -A'
+alias ps-grep='ps aux | grep'
+alias hosts='code /etc/hosts'
+alias ip='dig +short myip.opendns.com @resolver1.opendns.com'
+
+
+# ---------------------------------
+# Git specific aliases
+# ---------------------------------
+
+alias g='git'
+alias wip="git add .;git commit -m 'wip'"
+alias nah='git reset --hard;git clean -df'
+
+
+# ---------------------------------
+# PHP :D
+# ---------------------------------
+
+alias art='php artisan'
+
+# Composer
+alias dump='composer dump-autoload -o'
+
+
+# ---------------------------------
+# NPM :D
+# ---------------------------------
+
+# This makes life MUCH easier :')
+alias nr='npm run'
+alias ni='npm install'
+alias nid='npm install -D'
+alias nip='npm install --only=prod'
+
+
+# ---------------------------------
+# Dummy
+# ---------------------------------
+
+alias shrug="printf '¯\_(ツ)_/¯' | pbcopy"
+alias flipt="printf '(╯°□°)╯︵ ┻━┻' | pbcopy"
+alias fight="printf '(ง'̀-'́)ง' | pbcopy"

@@ -1,0 +1,21 @@
+# I use this to experiment with new languages and features without making a
+# full fledged project
+play () {
+	# TODO : redirect io to /dev/null and write custom messages
+	if [ $# -lt 1 ] ; then
+		cd "$PATH_TO_PLAYGROUND" && echo 'In playground'
+	fi
+	mkdir -p $PATH_TO_PLAYGROUND/$1 && cd $PATH_TO_PLAYGROUND/$1
+	echo "In playground $1" 
+}
+
+# Create a new project and cd into it, does NOT check if project already exists
+project () {
+	# TODO : redirect io to /dev/null and write custom messages
+        if [ $# -lt 1 ] ; then
+                cd "$PATH_TO_PROJECTS" && echo 'In Projects'
+	else
+		mkdir -p "$PATH_TO_PROJECTS/$1" && cd "$PATH_TO_PROJECTS/$1"
+		echo "In project $1"
+        fi
+}
