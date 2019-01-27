@@ -66,6 +66,7 @@ fi
 
 # Docker for containerization
 brew install docker
+brew install docker-compose
 
 # ---------------------------------------------
 # Useful tools
