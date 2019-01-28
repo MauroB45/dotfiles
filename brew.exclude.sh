@@ -72,6 +72,9 @@ brew install docker-compose
 # Useful tools
 # ---------------------------------------------
 
+# Development tool
+brew install make
+
 # Make requests with awesome response formatting
 brew install httpie
 

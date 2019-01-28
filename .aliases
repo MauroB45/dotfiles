@@ -18,6 +18,7 @@ alias ip='dig +short myip.opendns.com @resolver1.opendns.com'
 # ---------------------------------
 
 alias g='git'
+alias gck='git checkout'
 alias wip="git add .;git commit -m 'wip'"
 alias nah='git reset --hard;git clean -df'
 
