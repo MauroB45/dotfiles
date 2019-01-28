@@ -65,7 +65,7 @@ fi
 
 
 # Docker for containerization
-brew install docker
+brew cask install docker
 brew install docker-compose
 
 # ---------------------------------------------
