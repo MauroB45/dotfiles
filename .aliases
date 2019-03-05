@@ -21,6 +21,11 @@ alias g='git'
 alias gck='git checkout'
 alias wip="git add .;git commit -m 'wip'"
 alias nah='git reset --hard;git clean -df'
+alias lol = log --graph --decorate --pretty=oneline --abbrev-commit
+alias lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+alias lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+alias lgn = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+alias logs = log --show-signature
 
 
 # ---------------------------------
