@@ -1,6 +1,7 @@
+
 # I use this to experiment with new languages and features without making a
 # full fledged project
-play () {
+function play() {
 	# TODO : redirect io to /dev/null and write custom messages
 	if [ $# -lt 1 ] ; then
 		cd "$PATH_TO_PLAYGROUND" && echo 'In playground'
@@ -10,7 +11,7 @@ play () {
 }
 
 # Create a new project and cd into it, does NOT check if project already exists
-project () {
+function project() {
 	# TODO : redirect io to /dev/null and write custom messages
         if [ $# -lt 1 ] ; then
                 cd "$PATH_TO_PROJECTS" && echo 'In Projects'
