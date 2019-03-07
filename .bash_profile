@@ -1,4 +1,4 @@
-source .exports
+source ~/.exports
 
 # Load my aliases
 if [ -f ~/.aliases ]; then
