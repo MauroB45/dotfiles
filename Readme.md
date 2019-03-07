@@ -1,6 +1,6 @@
 # Personal config
 
-Here in this branch I keep and maintain my dotfiles for windows. This is my personal repository for my own personal setup!. It includes some tools, aliases and custom functions for productivity boost.
+Here in this branch I keep and maintain my dotfiles for windows. This is my personal repository for my own personal setup! It includes some tools, aliases and custom functions for productivity boost.
 
 Please feel free to use it. [recomendations](#recomendations)
 
