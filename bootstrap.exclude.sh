@@ -20,7 +20,7 @@ link () {
 	# TODO - regex here?
 	if [ "$resp" = 'y' -o "$resp" = 'Y' ] ; then
 		for file in $( ls -A | grep -vE '\.exclude*|\.git$|\.gitignore|.*.md' ) ; do
-			ln -sv "$PWD/$file" "$HOME"
+			ln -svf "$PWD/$file" "$HOME"
 		done
 		# TODO: source files here?
 		echo "Symlinking complete"
@@ -38,6 +38,10 @@ install_tools () {
 		# TODO - regex here?
 		if [ "$resp" = 'y' -o "$resp" = 'Y' ] ; then
             xcode-select --install
+
+			# terminal power line 
+			sudo easy_install pip
+			pip install --user powerline-status
 
 			echo "Installing useful stuff using brew. This may take a while..."
 			sh brew.exclude.sh

@@ -135,7 +135,7 @@ brew cask install google-backup-and-sync
 brew cask install google-chrome
 
 # terminal with steroids
-brew cask install iterm2-nightly
+brew cask install iterm2-nightly 
 
 # quick api test
 brew cask install postman
