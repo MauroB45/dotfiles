@@ -21,6 +21,9 @@ alias g='git'
 alias gck='git checkout'
 alias wip="git add .;git commit -m 'wip'"
 alias nah='git reset --hard;git clean -df'
+alias glog='git log --graph --decorate --pretty=oneline --abbrev-commit'
+alias gloga='log --graph --decorate --pretty=oneline --abbrev-commit --all'
+alias glogs='log --show-signature'
 
 
 # ---------------------------------
