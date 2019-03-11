@@ -7,10 +7,13 @@ alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
 alias '?=man'
-alias ls='ls -A'
 alias ps-grep='ps aux | grep'
 alias hosts='code /etc/hosts'
 alias ip='dig +short myip.opendns.com @resolver1.opendns.com'
+
+alias ls='ls -F -h --color=always -v --author --time-style=long-iso'
+alias ll='ls -l'
+alias l='ls -l -a'
 
 
 # ---------------------------------
@@ -18,12 +21,13 @@ alias ip='dig +short myip.opendns.com @resolver1.opendns.com'
 # ---------------------------------
 
 alias g='git'
-alias gck='git checkout'
+alias gc='git checkout'
+alias gcm='git commit'
 alias wip="git add .;git commit -m 'wip'"
 alias nah='git reset --hard;git clean -df'
 alias glog='git log --graph --decorate --pretty=oneline --abbrev-commit'
-alias gloga='log --graph --decorate --pretty=oneline --abbrev-commit --all'
-alias glogs='log --show-signature'
+alias gloga='git log --graph --decorate --pretty=oneline --abbrev-commit --all'
+alias glogs='git log --show-signature'
 
 
 # ---------------------------------
