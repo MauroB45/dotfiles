@@ -11,10 +11,6 @@ alias ps-grep='ps aux | grep'
 alias hosts='code /etc/hosts'
 alias ip='dig +short myip.opendns.com @resolver1.opendns.com'
 
-alias ls='ls -F -h --color=always -v --author --time-style=long-iso'
-alias ll='ls -l'
-alias l='ls -l -a'
-
 
 # ---------------------------------
 # Git specific aliases
