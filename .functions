@@ -20,3 +20,14 @@ function project() {
 		echo "In project $1"
         fi
 }
+
+# Create a new project and cd into it, does NOT check if project already exists
+function medic() {
+	# TODO : redirect io to /dev/null and write custom messages
+        if [ $# -lt 1 ] ; then
+                cd "$PATH_TO_MEDIC" && echo 'In tickets'
+	else
+		mkdir -p "$PATH_TO_MEDIC/$1" && cd "$PATH_TO_MEDIC/$1"
+		echo "In ticket $1"
+        fi
+}
