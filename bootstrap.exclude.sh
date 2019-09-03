@@ -50,6 +50,20 @@ install_tools () {
 		else
 			echo "Brew installation cancelled by user"
 		fi
+		
+		echo "This utility will install Krypton for security"
+		echo "Proceed? (y/n)"
+		read resp
+		# TODO - regex here?
+		if [ "$resp" = 'y' -o "$resp" = 'Y' ] ; then
+            curl https://krypt.co/kr | sh 
+			kr pair
+			kr codesign
+			# test
+			export GPG_TTY=$(tty); kr codesign test
+		else
+			echo "Brew installation cancelled by user"
+		fi
 	else
 		echo "Skipping installations using Homebrew because MacOS was not detected..."
 	fi

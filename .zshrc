@@ -96,3 +96,6 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 . $HOME/.my-zshrc
+
+# Added by Krypton
+export GPG_TTY=$(tty)
