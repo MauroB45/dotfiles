@@ -5,7 +5,6 @@ source .exports
 
 # Activate plugins
 plugins=(git zsh-completions)
-plugins=(zsh-autosuggestions)
 plugins=(zsh-syntax-highlighting)
 
 # Custom vars

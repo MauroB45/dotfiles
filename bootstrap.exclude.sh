@@ -8,6 +8,8 @@ init () {
 	mkdir -p "$PATH_TO_PROJECTS"
 	echo "Making a Playground folder in $PATH_TO_PLAYGROUND if it doesn't already exist"
 	mkdir -p "$PATH_TO_PLAYGROUND"
+	echo "Making a Work folder in $PATH_TO_WORK if it doesn't already exist"
+	mkdir -p "$PATH_TO_WORK"
 }
 
 # TODO : Delete symlinks to deleted files

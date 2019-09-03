@@ -19,3 +19,14 @@ project () {
 		echo "In project $1"
         fi
 }
+
+# Create a new work related project and cd into it
+work () {
+	# TODO : redirect io to /dev/null and write custom messages
+        if [ $# -lt 1 ] ; then
+                cd "$PATH_TO_WORK" && echo 'In Projects'
+	else
+		mkdir -p "$PATH_TO_WORK/$1" && cd "$PATH_TO_WORK/$1"
+		echo "In work project $1"
+        fi
+}

@@ -1,3 +1,4 @@
 export PATH_TO_PLAYGROUND="$HOME/Playground"
 export PATH_TO_PROJECTS="$HOME/Projects"
+export PATH_TO_WORK="$HOME/Work"
 export TEXT_EDITOR="Visual Studio Code"
