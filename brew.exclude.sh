@@ -143,6 +143,9 @@ brew cask install postman
 # team communication
 brew cask install slack
 
+# some music
+brew cask install spotify
+
 
 # Remove outdated versions from the cellar
 brew cleanup

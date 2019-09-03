@@ -3,12 +3,10 @@ export PATH="$HOME/bin:$PATH"
 # Source this first since it contains the locations of directories needed by funcitons
 source .exports
 
-# Load extensions
-source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-
 # Activate plugins
 plugins=(git zsh-completions)
+plugins=(zsh-autosuggestions)
+plugins=(zsh-syntax-highlighting)
 
 # Custom vars
 SPARK=$HOME/.spark-installer
