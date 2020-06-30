@@ -1,6 +1,5 @@
 #!/bin/sh
-PATH_TO_PROJECTS=~/Projects
-PATH_TO_PLAYGROUND=~/Playground
+. ./.exports
 
 # Initialize a few things
 init () {
@@ -32,43 +31,6 @@ link () {
 	fi
 }
 
-install_tools () {
-	if [ $( echo "$OSTYPE" | grep 'darwin' ) ] ; then
-		echo "This utility will install useful utilities using Homebrew"
-		echo "Proceed? (y/n)"
-		read resp
-		# TODO - regex here?
-		if [ "$resp" = 'y' -o "$resp" = 'Y' ] ; then
-            xcode-select --install
-
-			# terminal power line 
-			sudo easy_install pip
-			pip install --user powerline-status
-
-			echo "Installing useful stuff using brew. This may take a while..."
-			sh brew.exclude.sh
-		else
-			echo "Brew installation cancelled by user"
-		fi
-		
-		echo "This utility will install Krypton for security"
-		echo "Proceed? (y/n)"
-		read resp
-		# TODO - regex here?
-		if [ "$resp" = 'y' -o "$resp" = 'Y' ] ; then
-            curl https://krypt.co/kr | sh 
-			kr pair
-			kr codesign
-			# test
-			export GPG_TTY=$(tty); kr codesign test
-		else
-			echo "Brew installation cancelled by user"
-		fi
-	else
-		echo "Skipping installations using Homebrew because MacOS was not detected..."
-	fi
-}
-
 init
 link
-install_tools
+
