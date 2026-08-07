@@ -1,0 +1,8 @@
+brew "starship"
+brew "fzf"
+brew "zoxide"
+brew "ripgrep"
+brew "bat"
+brew "eza"
+brew "jq"
+brew "git-delta"
