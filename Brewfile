@@ -10,7 +10,6 @@ brew "jq"
 brew "git-delta"
 
 cask "ghostty"
-cask "visual-studio-code"
 brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
 
@@ -23,6 +22,8 @@ brew "watch"
 brew "wget"
 brew "httpie"
 brew "pinentry-mac"
+cask "zed"
+cask "visual-studio-code"
 
 # Daily
 
