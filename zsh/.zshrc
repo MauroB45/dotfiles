@@ -1,4 +1,3 @@
-export GPG_TTY=$(tty)
 export PATH="$HOME/.local/bin:$PATH"
 
 # Homebrew
@@ -22,8 +21,14 @@ source "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.z
 # Node
 eval "$(fnm env --use-on-cd --shell zsh)"
 
+# GPG
+export GPG_TTY=$(tty)
+
+# Dotfiles zsh directory
+DOTFILES_ZSH_DIR="${0:A:h}"
+
 # Aliases
-source "$HOME/dotfiles/zsh/aliases.zsh"
+source "$DOTFILES_ZSH_DIR/aliases.zsh"
 
 # Machine-specific configuration
 [[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
