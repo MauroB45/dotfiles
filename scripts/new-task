@@ -1,0 +1,113 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+TICKET="${1:-}"
+SLUG="${2:-}"
+
+if [[ -z "$TICKET" ]]; then
+  echo "Usage: new-task TICKET-123 [slug]"
+  exit 1
+fi
+
+if [[ -z "${OBSIDIAN_VAULT:-}" ]]; then
+  echo "OBSIDIAN_VAULT is not configured."
+  exit 1
+fi
+
+REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || true)"
+
+if [[ -z "$REPO_ROOT" ]]; then
+  echo "Run new-task from inside a Git repository."
+  exit 1
+fi
+
+REPO_NAME="$(basename "$REPO_ROOT")"
+REPO_PARENT="$(dirname "$REPO_ROOT")"
+
+TICKET_LOWER="$(echo "$TICKET" | tr '[:upper:]' '[:lower:]')"
+
+if [[ -n "$SLUG" ]]; then
+  BRANCH="${TICKET_LOWER}-${SLUG}"
+else
+  BRANCH="$TICKET_LOWER"
+fi
+
+WORKTREE_ROOT="${REPO_PARENT}/${REPO_NAME}-worktrees"
+WORKTREE_PATH="${WORKTREE_ROOT}/${BRANCH}"
+
+NOTES_DIR="${OBSIDIAN_VAULT}/Work/${REPO_NAME}/${TICKET}"
+NOTES_LINK="${WORKTREE_PATH}/notes"
+
+mkdir -p "$WORKTREE_ROOT"
+mkdir -p "$NOTES_DIR"
+
+echo "Repository: $REPO_NAME"
+echo "Ticket:     $TICKET"
+echo "Branch:     $BRANCH"
+echo "Worktree:   $WORKTREE_PATH"
+echo "Notes:      $NOTES_DIR"
+echo
+
+if [[ -d "$WORKTREE_PATH" ]]; then
+  echo "✓ Worktree already exists"
+elif git show-ref --verify --quiet "refs/heads/$BRANCH"; then
+  git worktree add "$WORKTREE_PATH" "$BRANCH"
+else
+  git worktree add -b "$BRANCH" "$WORKTREE_PATH"
+fi
+
+if [[ ! -f "$NOTES_DIR/spec.md" ]]; then
+  cat > "$NOTES_DIR/spec.md" <<EOF
+# $TICKET
+
+## Jira
+
+TODO: Add Jira URL
+
+## Specification
+
+Paste the frozen Jira ticket here.
+EOF
+
+  echo "✓ Created spec.md"
+fi
+
+if [[ ! -f "$NOTES_DIR/plan.md" ]]; then
+  touch "$NOTES_DIR/plan.md"
+  echo "✓ Created plan.md"
+fi
+
+if [[ ! -f "$NOTES_DIR/session.md" ]]; then
+  cat > "$NOTES_DIR/session.md" <<EOF
+# $TICKET — Session
+
+## Notes
+
+EOF
+
+  echo "✓ Created session.md"
+fi
+
+if [[ -e "$NOTES_LINK" || -L "$NOTES_LINK" ]]; then
+  echo "✓ notes link already exists"
+else
+  ln -s "$NOTES_DIR" "$NOTES_LINK"
+  echo "✓ Linked notes"
+fi
+
+EXCLUDE_FILE="$(git -C "$WORKTREE_PATH" rev-parse --git-path info/exclude)"
+
+if ! grep -qxF "notes" "$EXCLUDE_FILE" 2>/dev/null; then
+  echo "notes" >> "$EXCLUDE_FILE"
+  echo "✓ Ignored notes locally"
+fi
+
+cd "$WORKTREE_PATH"
+
+echo
+echo "Ready:"
+echo "$WORKTREE_PATH"
+echo
+
+exec claude

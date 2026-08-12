@@ -134,3 +134,65 @@ Check whether everything is installed:
 brew bundle check
 ```
 
+## GPG commit signing
+
+Work machines use GPG commit signing. GPG and the macOS pinentry application are installed through the `Brewfile`:
+
+```ruby
+brew "gnupg"
+brew "pinentry-mac"
+```
+
+Generate a machine-specific GPG key:
+
+```bash
+gpg --full-generate-key
+gpg --list-secret-keys --keyid-format=long
+```
+
+Configure the work identity in `~/.gitconfig-local`:
+
+```ini
+[user]
+    name = Your Name
+    email = your.work@example.com
+    signingkey = YOUR_KEY_ID
+
+[commit]
+    gpgsign = true
+
+[tag]
+    gpgSign = true
+```
+
+Configure `~/.gnupg/gpg-agent.conf`:
+
+```text
+pinentry-program /opt/homebrew/bin/pinentry-mac
+
+default-cache-ttl 28800
+max-cache-ttl 28800
+```
+
+Restart the agent after changing its configuration:
+
+```bash
+gpgconf --kill gpg-agent
+```
+
+Add the public key to the work GitHub account:
+
+```bash
+gpg --armor --export YOUR_KEY_ID > /tmp/work-gpg.pub
+gh gpg-key add /tmp/work-gpg.pub --title "Work Mac"
+rm /tmp/work-gpg.pub
+```
+
+Verify signing:
+
+```bash
+git commit --allow-empty -m "Test GPG signing"
+git log --show-signature -1
+```
+
+GPG private keys, `~/.gnupg`, and machine-specific signing key IDs are intentionally not stored in this repository.

@@ -25,6 +25,7 @@ link "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc"
 link "$DOTFILES/git/.gitconfig" "$HOME/.gitconfig"
 link "$DOTFILES/git/.gitignore_global" "$HOME/.gitignore_global"
 link "$DOTFILES/starship/starship.toml" "$HOME/.config/starship.toml"
+link "$DOTFILES/scripts/new-task" "$HOME/.local/bin/new-task"
 
 # Machine-specific Git identity
 if [ ! -f "$HOME/.gitconfig-local" ]; then

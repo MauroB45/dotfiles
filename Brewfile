@@ -1,4 +1,5 @@
 # Basic
+
 brew "starship"
 brew "fzf"
 brew "zoxide"
@@ -10,11 +11,20 @@ brew "git-delta"
 
 cask "ghostty"
 cask "visual-studio-code"
+brew "zsh-autosuggestions"
+brew "zsh-syntax-highlighting"
 
-# development
+# Development
+
 brew "fnm"
 brew "gh"
-
+brew "gnupg"
 brew "watch"
 brew "wget"
 brew "httpie"
+brew "pinentry-mac"
+
+# Daily
+
+cask "spotify"
+cask "rectangle"
