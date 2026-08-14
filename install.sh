@@ -27,6 +27,12 @@ link "$DOTFILES/git/.gitignore_global" "$HOME/.gitignore_global"
 link "$DOTFILES/starship/starship.toml" "$HOME/.config/starship.toml"
 link "$DOTFILES/scripts/new-task" "$HOME/.local/bin/new-task"
 
+# Claude Code
+mkdir -p "$HOME/.claude"
+
+ln -sfn "$DOTFILES/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
+ln -sfn "$DOTFILES/claude/skills" "$HOME/.claude/skills"
+
 # Machine-specific Git identity
 if [ ! -f "$HOME/.gitconfig-local" ]; then
   cat > "$HOME/.gitconfig-local" <<'EOF'
