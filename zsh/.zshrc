@@ -24,11 +24,8 @@ eval "$(fnm env --use-on-cd --shell zsh)"
 # GPG
 export GPG_TTY=$(tty)
 
-# Dotfiles zsh directory
-DOTFILES_ZSH_DIR="${0:A:h}"
-
 # Aliases
-source "$DOTFILES_ZSH_DIR/aliases.zsh"
+source "$HOME/.dotfiles/zsh/aliases.zsh"
 
 # Machine-specific configuration
 [[ -f "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"

@@ -28,7 +28,7 @@ REPO_PARENT="$(dirname "$REPO_ROOT")"
 TICKET_LOWER="$(echo "$TICKET" | tr '[:upper:]' '[:lower:]')"
 
 if [[ -n "$SLUG" ]]; then
-  BRANCH="${TICKET_LOWER}-${SLUG}"
+  BRANCH="${TICKET_LOWER}/${SLUG}"
 else
   BRANCH="$TICKET_LOWER"
 fi

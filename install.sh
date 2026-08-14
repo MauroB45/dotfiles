@@ -38,5 +38,7 @@ EOF
   echo "⚠️  Created ~/.gitconfig-local — update your Git identity."
 fi
 
+link "$DOTFILES" "$HOME/.dotfiles"
+
 echo
 echo "Dotfiles installed."
