@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Investigate
 
-Grill the problem and use relevant code. Do not modify code.
+Grill (/grilling) the problem and use relevant code. Do not modify code.
 
 Read the ticket/conversation, `CLAUDE.md`, relevant docs/ADRs, code and tests.
 

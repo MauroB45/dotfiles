@@ -45,4 +45,32 @@ Report:
 
 Do not commit or push unless explicitly requested.
 
-Open Visual Studio Code 
+## Commits
+
+Implement in small, coherent commits.
+
+Prefer **vertical commits** that deliver one complete behavioural increment across the necessary layers, including its tests.
+
+A good commit should:
+
+- represent one logical user/system behaviour
+- include all layers needed for that behaviour
+- include relevant tests
+- leave the repository valid and reviewable
+- avoid mixing unrelated cleanup or refactors
+
+Avoid horizontal commits such as "update API", "update UI", then "add tests" when those changes only make sense together.
+
+A preparatory refactor may be its own commit when it preserves behaviour and genuinely enables subsequent vertical changes.
+
+Before implementation, identify sensible commit boundaries from the plan.
+
+At each boundary:
+
+1. run focused validation
+2. review the diff
+3. prepare the commit message
+4. wait for user approval
+5. commit, then continue
+
+Do not force one commit per checklist item.
