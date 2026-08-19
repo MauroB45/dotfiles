@@ -1,4 +1,5 @@
-export PATH="$HOME/.local/bin:$PATH"
+# User binaries
+export PATH="$HOME/.local/bin:$HOME/go/bin:$PATH"
 
 # Homebrew
 eval "$(/opt/homebrew/bin/brew shellenv)"

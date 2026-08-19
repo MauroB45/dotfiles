@@ -24,6 +24,7 @@ brew "httpie"
 brew "pinentry-mac"
 cask "zed"
 cask "visual-studio-code"
+brew "go"
 
 # Daily
 

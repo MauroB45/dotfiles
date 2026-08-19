@@ -2,7 +2,7 @@
 
 set -e
 
-DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 
 mkdir -p "$HOME/.config"
 mkdir -p "$HOME/.local/bin"
@@ -25,7 +25,10 @@ link "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc"
 link "$DOTFILES/git/.gitconfig" "$HOME/.gitconfig"
 link "$DOTFILES/git/.gitignore_global" "$HOME/.gitignore_global"
 link "$DOTFILES/starship/starship.toml" "$HOME/.config/starship.toml"
+
 link "$DOTFILES/scripts/new-task" "$HOME/.local/bin/new-task"
+link "$DOTFILES/scripts/review-pr" "$HOME/.local/bin/review-pr"
+link "$DOTFILES/scripts/prs" "$HOME/.local/bin/prs"
 
 # Claude Code
 mkdir -p "$HOME/.claude"

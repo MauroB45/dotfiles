@@ -1,0 +1,108 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+command -v gh >/dev/null || {
+  echo "gh is required"
+  exit 1
+}
+
+command -v jq >/dev/null || {
+  echo "jq is required"
+  exit 1
+}
+
+command -v fzf >/dev/null || {
+  echo "fzf is required"
+  exit 1
+}
+
+REVIEW_REQUESTED="$(
+  gh search prs \
+    --review-requested=@me \
+    --state=open \
+    --limit=50 \
+    --json number,title,repository,author,updatedAt,isDraft,url |
+  jq 'map(. + {reason: "REVIEW"})'
+)"
+
+ASSIGNED="$(
+  gh search prs \
+    --assignee=@me \
+    --state=open \
+    --limit=50 \
+    --json number,title,repository,author,updatedAt,isDraft,url |
+  jq 'map(. + {reason: "ASSIGNED"})'
+)"
+
+PRS="$(
+  jq -s '
+    add
+    | group_by(.repository.nameWithOwner + "#" + (.number | tostring))
+    | map(
+        .[0] + {
+          reason: (map(.reason) | unique | join("+"))
+        }
+      )
+    | sort_by(.updatedAt)
+    | reverse
+  ' <<<"$REVIEW_REQUESTED"$'\n'"$ASSIGNED"
+)"
+
+COUNT="$(jq 'length' <<<"$PRS")"
+
+if [[ "$COUNT" -eq 0 ]]; then
+  echo "No PRs waiting for you 🎉"
+  exit 0
+fi
+
+# Check whether each PR has received any review.
+PRS="$(
+  jq -c '.[]' <<<"$PRS" |
+  while read -r item; do
+    REPO="$(jq -r '.repository.nameWithOwner' <<<"$item")"
+    PR="$(jq -r '.number' <<<"$item")"
+
+    REVIEWED="$(
+      gh pr view "$PR" \
+        --repo "$REPO" \
+        --json latestReviews \
+        --jq 'if (.latestReviews | length) > 0 then "REVIEWED" else "—" end'
+    )"
+
+    jq \
+      --arg reviewed "$REVIEWED" \
+      '. + {reviewed: $reviewed}' \
+      <<<"$item"
+  done |
+  jq -s .
+)"
+
+SELECTION="$(
+  jq -r '
+    .[] |
+    [
+      .repository.nameWithOwner,
+      ("#" + (.number | tostring)),
+      .reviewed,
+      .reason,
+      (if .isDraft then "DRAFT" else "READY" end),
+      ("@" + .author.login),
+      .title
+    ] |
+    @tsv
+  ' <<<"$PRS" |
+  column -t -s $'\t' |
+  fzf \
+    --header="PR inbox" \
+    --prompt="Review > " \
+    --height=80% \
+    --reverse
+)"
+
+[[ -z "$SELECTION" ]] && exit 0
+
+REPO="$(awk '{print $1}' <<<"$SELECTION")"
+PR="$(awk '{print $2}' <<<"$SELECTION" | tr -d '#')"
+
+exec review-pr "$REPO" "$PR"
