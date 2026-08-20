@@ -2,13 +2,96 @@
 
 set -euo pipefail
 
+usage() {
+  echo "Usage: new-task TICKET-123 [slug] [--base <branch-or-ticket>]"
+  echo
+  echo "Examples:"
+  echo "  new-task GP-125 travel-date-ui"
+  echo "  new-task GP-125 travel-date-ui --base GP-124"
+  echo "  new-task GP-125 travel-date-ui --base GP-124/domain-support"
+  exit 1
+}
+
+resolve_base() {
+  local input="$1"
+
+  # Exact local branch
+  if git show-ref --verify --quiet "refs/heads/$input"; then
+    echo "$input"
+    return
+  fi
+
+  # Ticket prefix, e.g. GP-124/*
+  local matches
+  matches="$(
+    git for-each-ref \
+      --format='%(refname:short)' \
+      "refs/heads/${input}/*"
+  )"
+
+  local count
+  count="$(printf '%s\n' "$matches" | grep -c . || true)"
+
+  if [[ "$count" -eq 1 ]]; then
+    echo "$matches"
+    return
+  fi
+
+  if [[ "$count" -gt 1 ]]; then
+    echo "Multiple branches found for $input:" >&2
+    printf '  %s\n' $matches >&2
+    echo >&2
+    echo "Pass the full branch name with --base." >&2
+    return 1
+  fi
+
+  echo "Base branch not found: $input" >&2
+  return 1
+}
+
 TICKET="${1:-}"
-SLUG="${2:-}"
 
 if [[ -z "$TICKET" ]]; then
-  echo "Usage: new-task TICKET-123 [slug]"
-  exit 1
+  usage
 fi
+
+shift
+
+SLUG=""
+BASE_INPUT=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --base)
+      if [[ $# -lt 2 ]]; then
+        echo "--base requires a branch name or ticket key."
+        exit 1
+      fi
+
+      BASE_INPUT="$2"
+      shift 2
+      ;;
+
+    --help|-h)
+      usage
+      ;;
+
+    -*)
+      echo "Unknown option: $1"
+      usage
+      ;;
+
+    *)
+      if [[ -n "$SLUG" ]]; then
+        echo "Unexpected argument: $1"
+        usage
+      fi
+
+      SLUG="$1"
+      shift
+      ;;
+  esac
+done
 
 if [[ -z "${OBSIDIAN_VAULT:-}" ]]; then
   echo "OBSIDIAN_VAULT is not configured."
@@ -25,16 +108,21 @@ fi
 REPO_NAME="$(basename "$REPO_ROOT")"
 REPO_PARENT="$(dirname "$REPO_ROOT")"
 
-TICKET_LOWER="$(echo "$TICKET" | tr '[:upper:]' '[:lower:]')"
-
 if [[ -n "$SLUG" ]]; then
-  BRANCH="${TICKET_LOWER}/${SLUG}"
+  BRANCH="${TICKET}/${SLUG}"
 else
-  BRANCH="$TICKET_LOWER"
+  BRANCH="$TICKET"
+fi
+
+BASE_BRANCH=""
+
+if [[ -n "$BASE_INPUT" ]]; then
+  BASE_BRANCH="$(resolve_base "$BASE_INPUT")"
 fi
 
 WORKTREE_ROOT="${REPO_PARENT}/${REPO_NAME}-worktrees"
-WORKTREE_PATH="${WORKTREE_ROOT}/${BRANCH}"
+WORKTREE_DIR="${BRANCH//\//-}"
+WORKTREE_PATH="${WORKTREE_ROOT}/${WORKTREE_DIR}"
 
 NOTES_DIR="${OBSIDIAN_VAULT}/Work/${REPO_NAME}/${TICKET}"
 NOTES_LINK="${WORKTREE_PATH}/notes"
@@ -45,18 +133,47 @@ mkdir -p "$NOTES_DIR"
 echo "Repository: $REPO_NAME"
 echo "Ticket:     $TICKET"
 echo "Branch:     $BRANCH"
+
+if [[ -n "$BASE_BRANCH" ]]; then
+  echo "Base:       $BASE_BRANCH"
+else
+  echo "Base:       current HEAD"
+fi
+
 echo "Worktree:   $WORKTREE_PATH"
 echo "Notes:      $NOTES_DIR"
 echo
 
+# Create or reuse worktree
 if [[ -d "$WORKTREE_PATH" ]]; then
   echo "✓ Worktree already exists"
+
 elif git show-ref --verify --quiet "refs/heads/$BRANCH"; then
+  if [[ -n "$BASE_BRANCH" ]]; then
+    echo "! Branch $BRANCH already exists — ignoring --base $BASE_BRANCH"
+  fi
+
   git worktree add "$WORKTREE_PATH" "$BRANCH"
+
+elif [[ -n "$BASE_BRANCH" ]]; then
+  git worktree add -b "$BRANCH" "$WORKTREE_PATH" "$BASE_BRANCH"
+
 else
   git worktree add -b "$BRANCH" "$WORKTREE_PATH"
 fi
 
+# Create local environment file
+ENV_EXAMPLE="${WORKTREE_PATH}/.env.local.example"
+ENV_LOCAL="${WORKTREE_PATH}/.env.local"
+
+if [[ -f "$ENV_LOCAL" ]]; then
+  echo "✓ .env.local already exists"
+elif [[ -f "$ENV_EXAMPLE" ]]; then
+  cp "$ENV_EXAMPLE" "$ENV_LOCAL"
+  echo "✓ Created .env.local from .env.local.example"
+fi
+
+# Create ticket notes
 if [[ ! -f "$NOTES_DIR/spec.md" ]]; then
   cat > "$NOTES_DIR/spec.md" <<EOF
 # $TICKET
@@ -89,6 +206,7 @@ EOF
   echo "✓ Created session.md"
 fi
 
+# Link notes into worktree
 if [[ -e "$NOTES_LINK" || -L "$NOTES_LINK" ]]; then
   echo "✓ notes link already exists"
 else
@@ -96,6 +214,7 @@ else
   echo "✓ Linked notes"
 fi
 
+# Ignore notes locally without modifying the repository's .gitignore
 EXCLUDE_FILE="$(git -C "$WORKTREE_PATH" rev-parse --git-path info/exclude)"
 
 if ! grep -qxF "notes" "$EXCLUDE_FILE" 2>/dev/null; then
@@ -110,4 +229,4 @@ echo "Ready:"
 echo "$WORKTREE_PATH"
 echo
 
-exec claude
+exec claude "/investigate"

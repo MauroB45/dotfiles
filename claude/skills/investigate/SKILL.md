@@ -1,12 +1,12 @@
 ---
 name: investigate
-description: Understand a problem and the relevant code before specifying a solution.
+description: Understand a problem and the relevant code before specifying or implementing a solution.
 disable-model-invocation: true
 ---
 
 # Investigate
 
-Grill (/grilling) the problem and use relevant code. Do not modify code.
+Investigate and grill (/grilling) the problem using the relevant code. Do not modify code or create artifacts.
 
 Read the ticket/conversation, `CLAUDE.md`, relevant docs/ADRs, code and tests.
 
@@ -21,8 +21,26 @@ Determine:
 
 Use project/domain terminology. Separate facts from assumptions. Don't invent requirements.
 
-Write `notes/investigation.md`:
+Find facts from the codebase yourself. Ask the user only about decisions, requirements, or ambiguities that cannot be resolved from the available context.
 
+Do not plan or implement.
+
+## Investigation complete.
+
+Recommend the appropriate next step:
+
+- `/spec` when the understanding should be made durable or scope needs to be assessed
+- `/plan` when requirements are already clear but implementation needs planning
+- `/implement` when the problem is sufficiently understood and small enough to implement directly
+
+Finally, ask whether the user wants to:
+
+1. **Keep in context** — leave the investigation in the current conversation and continue working from it. 
+2. **Capture** — persist the important investigation context before continuing (`notes/investigation.md`)
+
+Do not create an investigation artifact unless the user chooses to capture it.
+
+<investigation-template>
 # Investigation
 
 ## Problem
@@ -39,5 +57,4 @@ Important constraints, edge cases and regression risks.
 
 ## Open Questions
 Only questions that materially affect the solution.
-
-Do not plan or implement.
+</investigation-template>

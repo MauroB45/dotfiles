@@ -6,7 +6,11 @@ disable-model-invocation: true
 
 Break the current conversation, spec or plan into small, independently deliverable tickets. Do not implement.
 
-Read `notes/spec.md`, `notes/investigation.md` if present, and relevant project context.
+Read:
+- `notes/spec.md`
+- current conversation and investigation context
+- relevant project context
+- `CLAUDE.md`
 
 ## Slice
 
@@ -68,4 +72,4 @@ After publishing, report which tickets are currently unblocked.
 
 Each ticket then follows:
 
-`/plan → confirm test seams → /implement → /test → /review`
+`/plan → confirm test seams → /implement → /code-review`

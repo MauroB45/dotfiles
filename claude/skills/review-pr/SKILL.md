@@ -1,3 +1,9 @@
+---
+name: review-pr
+description: Review another engineer's pull request and prepare the human reviewer.
+disable-model-invocation: true
+---
+
 # Review PR
 
 Review the current pull request as a senior frontend engineer.

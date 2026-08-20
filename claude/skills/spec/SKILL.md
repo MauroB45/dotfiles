@@ -12,15 +12,15 @@ The specification defines WHAT and WHY, not HOW to implement it.
 
 Read:
 
-- `notes/investigation.md`, if available
-- current conversation
+- current conversation and investigation context
 - source ticket or issue
-<!-- - relevant project documentation -->
 - `CLAUDE.md`
 
 Use project domain terminology.
 
 Treat confirmed product requirements as authoritative.
+
+If important context is missing or ambiguous, ask questions before freezing the specification. Do not invent requirements.
 
 ## Synthesis
 
@@ -38,6 +38,14 @@ Do not invent requirements to make the specification more complete.
 
 Do not include speculative future work.
 
+## Scope assessment
+
+Assess whether the specification represents one coherent ticket and PR.
+
+Consider whether the change can be reviewed and understood independently, whether parts have different responsibilities or concerns, whether parts can be implemented or released independently, whether the resulting PR would be unnecessarily large or difficult to review
+
+If the work should be split, propose to use /to-tickets skill.
+
 ## Keep implementation separate
 
 Do not prescribe:
@@ -52,6 +60,8 @@ Technical constraints that materially define behaviour may be included.
 ## Output
 
 Write to: `notes/spec.md`
+
+Preserve any existing `## Jira` section at the top of the file.
 
 Use:
 

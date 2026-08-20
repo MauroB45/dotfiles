@@ -6,21 +6,35 @@ disable-model-invocation: true
 
 # Implement
 
-Read `notes/spec.md`, `notes/plan.md`, `CLAUDE.md`, and relevant code.
+Read `notes/spec.md`, `notes/plan.md`, and relevant code.
 
 Implement the approved plan. Keep changes focused and follow existing project patterns.
+
+If `notes/plan.md` is absent or empty, the work came straight from `/investigate`. Agree a short ordered set of steps with the user first, then implement those. Do not create `notes/plan.md`.
+
+Before writing code, identify sensible commit boundaries (see **Commits**) and confirm them with the user.
 
 For each step:
 
 - make the smallest coherent change
 - preserve type safety
 - update/add tests when behaviour changes
-- mark completed items in `notes/plan.md`
+- mark completed items in `notes/plan.md` when it exists
 - run focused validation where useful
 
 If the plan is materially wrong, conflicts with the spec, or requires a significant change of direction, stop and explain rather than silently deviating.
 
 Avoid unrelated refactors, speculative abstractions, and new dependencies unless explicitly approved.
+
+## Tests
+
+Use the test seams confirmed during `/plan`.
+
+Prefer observable behaviour over implementation details, existing project test patterns, the highest practical seam, regression tests for bug fixes, and focused assertions over broad snapshots.
+
+Avoid unnecessary mocking and tests that only increase coverage.
+
+For Vue, test through the component's or composable's public behaviour where practical. For Vitest, follow existing mocking and setup conventions. Vue router should use `vue-router-mock`.
 
 ## Validate
 
@@ -63,14 +77,11 @@ Avoid horizontal commits such as "update API", "update UI", then "add tests" whe
 
 A preparatory refactor may be its own commit when it preserves behaviour and genuinely enables subsequent vertical changes.
 
-Before implementation, identify sensible commit boundaries from the plan.
-
 At each boundary:
 
 1. run focused validation
 2. review the diff
-3. prepare the commit message
-4. wait for user approval
-5. commit, then continue
+3. prepare the commit message following the procedure in `CLAUDE.md`, which includes waiting for approval
+4. commit, then continue
 
 Do not force one commit per checklist item.

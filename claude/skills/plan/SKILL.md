@@ -17,38 +17,14 @@ Treat `notes/spec.md` as the source of truth.
 
 ## Validate understanding
 
-Before planning:
+Build on the investigation rather than repeating it. Confirm only what planning depends on:
 
-1. Confirm the specification matches the current codebase.
-2. Trace the relevant data/control flow.
-3. Identify existing implementation patterns.
-4. Identify affected contracts, state, APIs, types, and boundaries.
-5. Inspect relevant existing tests.
-6. Identify technical risks and regressions.
+- the specification still matches the current codebase
+- affected contracts, state, APIs, types and boundaries
+- relevant existing tests
+- technical risks and regressions
 
-Do not repeat exhaustive investigation unnecessarily when `notes/investigation.md` already contains sufficient context.
-
-## Scope assessment
-
-Determine whether this is one coherent implementation unit.
-
-A single unit should:
-
-- deliver one coherent behaviour
-- be implementable in one focused context
-- have a clear validation boundary
-- avoid unrelated architectural changes
-- be reasonably reviewable as one change
-
-If the work contains multiple independently deliverable behaviours or is too large for one focused implementation:
-
-- stop before producing `notes/plan.md`
-- explain why decomposition is preferable
-- recommend `/to-tickets`
-
-Do not perform the breakdown inside `/plan`.
-
-If the work is appropriately sized, continue.
+`/spec` owns scope assessment. If planning exposes that the work is genuinely several independently deliverable behaviours, stop before writing `notes/plan.md`, explain why, and recommend `/to-tickets`.
 
 ## Testing strategy
 

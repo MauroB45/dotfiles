@@ -84,8 +84,20 @@ FILES="$(
   jq -r '.files[] | "- `" + .path + "`"' <<<"$META"
 )"
 
+CREATED_DATE="$(date '+%Y-%m-%d')"
 if [[ ! -f "$REVIEW_FILE" ]]; then
   cat > "$REVIEW_FILE" <<EOF
+---
+categories:
+  - "[[Clippings]]"
+author:
+  - "[[Claude]]"
+status: Planning
+created: $CREATED_DATE
+tags:
+  - clippings
+---
+
 # PR #$PR — $TITLE
 
 ## Context
