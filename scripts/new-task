@@ -162,15 +162,25 @@ else
   git worktree add -b "$BRANCH" "$WORKTREE_PATH"
 fi
 
-# Create local environment file
-ENV_EXAMPLE="${WORKTREE_PATH}/.env.local.example"
-ENV_LOCAL="${WORKTREE_PATH}/.env.local"
+# Copy local configuration that a worktree does not inherit from Git
+if [[ "$REPO_ROOT" != "$WORKTREE_PATH" ]]; then
+  if [[ -f "${WORKTREE_PATH}/.env.local" ]]; then
+    echo "✓ .env.local already exists"
+  elif [[ -f "${REPO_ROOT}/.env.local" ]]; then
+    cp "${REPO_ROOT}/.env.local" "${WORKTREE_PATH}/.env.local"
+    echo "✓ Copied .env.local"
+  elif [[ -f "${WORKTREE_PATH}/.env.local.example" ]]; then
+    cp "${WORKTREE_PATH}/.env.local.example" "${WORKTREE_PATH}/.env.local"
+    echo "✓ Created .env.local from .env.local.example"
+  fi
 
-if [[ -f "$ENV_LOCAL" ]]; then
-  echo "✓ .env.local already exists"
-elif [[ -f "$ENV_EXAMPLE" ]]; then
-  cp "$ENV_EXAMPLE" "$ENV_LOCAL"
-  echo "✓ Created .env.local from .env.local.example"
+  if [[ -d "${REPO_ROOT}/.claude" ]]; then
+    mkdir -p "${WORKTREE_PATH}/.claude"
+
+    # -n keeps anything the worktree already has, including tracked files
+    cp -Rn "${REPO_ROOT}/.claude/." "${WORKTREE_PATH}/.claude/" || true
+    echo "✓ Copied .claude"
+  fi
 fi
 
 # Create ticket notes
@@ -188,11 +198,6 @@ Paste the frozen Jira ticket here.
 EOF
 
   echo "✓ Created spec.md"
-fi
-
-if [[ ! -f "$NOTES_DIR/plan.md" ]]; then
-  touch "$NOTES_DIR/plan.md"
-  echo "✓ Created plan.md"
 fi
 
 if [[ ! -f "$NOTES_DIR/session.md" ]]; then
@@ -229,4 +234,4 @@ echo "Ready:"
 echo "$WORKTREE_PATH"
 echo
 
-exec claude "/investigate"
+exec claude

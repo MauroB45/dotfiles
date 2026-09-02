@@ -20,6 +20,7 @@
 - Never commit, push, force-push, merge, rebase, or otherwise modify remote state unless explicitly requested.
 - Never amend existing commits unless explicitly requested.
 - Review the diff before preparing a commit.
+- Always ask before updating a PR template
 
 ### Commit messages
 
@@ -32,6 +33,7 @@ When asked to prepare a commit:
 5. Remove the temporary file after a successful commit.
 
 Commit messages should:
+
 - use a concise imperative subject
 - explain why when useful if not clear from subject
 - avoid implementation-detail noise

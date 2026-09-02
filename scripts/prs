@@ -17,12 +17,15 @@ command -v fzf >/dev/null || {
   exit 1
 }
 
+# How many `gh pr view` lookups to run at once.
+CONCURRENCY="${PRS_CONCURRENCY:-8}"
+
 REVIEW_REQUESTED="$(
   gh search prs \
     --review-requested=@me \
     --state=open \
     --limit=50 \
-    --json number,title,repository,author,updatedAt,isDraft,url |
+    --json number,title,repository,author,updatedAt,isDraft,url,labels |
   jq 'map(. + {reason: "REVIEW"})'
 )"
 
@@ -31,13 +34,20 @@ ASSIGNED="$(
     --assignee=@me \
     --state=open \
     --limit=50 \
-    --json number,title,repository,author,updatedAt,isDraft,url |
+    --json number,title,repository,author,updatedAt,isDraft,url,labels |
   jq 'map(. + {reason: "ASSIGNED"})'
 )"
 
+# Dependabot and design PRs are noise in the review inbox.
 PRS="$(
   jq -s '
     add
+    | map(
+        select(
+          (.author.login | test("^dependabot") | not)
+          and (any(.labels[]; .name | ascii_downcase == "design") | not)
+        )
+      )
     | group_by(.repository.nameWithOwner + "#" + (.number | tostring))
     | map(
         .[0] + {
@@ -56,26 +66,42 @@ if [[ "$COUNT" -eq 0 ]]; then
   exit 0
 fi
 
-# Check whether each PR has received any review.
+# Check whether each PR has received any review. One API call per PR, so run
+# them in parallel — serially this takes minutes once the inbox grows.
+pr_reviewed() {
+  local repo="$1" number="$2" reviewed
+
+  reviewed="$(
+    gh pr view "$number" \
+      --repo "$repo" \
+      --json latestReviews \
+      --jq 'if (.latestReviews | length) > 0 then "REVIEWED" else "—" end'
+  )" || reviewed="—"
+
+  printf '%s\t%s\t%s\n' "$repo" "$number" "$reviewed"
+}
+export -f pr_reviewed
+
+REVIEWS="$(
+  jq -r '.[] | [.repository.nameWithOwner, .number] | @tsv' <<<"$PRS" |
+  xargs -P "$CONCURRENCY" -n 2 bash -c 'pr_reviewed "$@"' _
+)"
+
 PRS="$(
-  jq -c '.[]' <<<"$PRS" |
-  while read -r item; do
-    REPO="$(jq -r '.repository.nameWithOwner' <<<"$item")"
-    PR="$(jq -r '.number' <<<"$item")"
-
-    REVIEWED="$(
-      gh pr view "$PR" \
-        --repo "$REPO" \
-        --json latestReviews \
-        --jq 'if (.latestReviews | length) > 0 then "REVIEWED" else "—" end'
-    )"
-
-    jq \
-      --arg reviewed "$REVIEWED" \
-      '. + {reviewed: $reviewed}' \
-      <<<"$item"
-  done |
-  jq -s .
+  jq --arg reviews "$REVIEWS" '
+    (
+      $reviews
+      | split("\n")
+      | map(select(length > 0) | split("\t"))
+      | map({key: (.[0] + "#" + .[1]), value: .[2]})
+      | from_entries
+    ) as $lookup
+    | map(
+        . + {
+          reviewed: ($lookup[.repository.nameWithOwner + "#" + (.number | tostring)] // "—")
+        }
+      )
+  ' <<<"$PRS"
 )"
 
 SELECTION="$(

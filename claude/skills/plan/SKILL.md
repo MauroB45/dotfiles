@@ -73,13 +73,26 @@ Avoid:
 
 ## Output
 
-After test-seam confirmation, write:
+After test-seam confirmation, create `notes/plan.md`. It does not exist yet.
 
-`notes/plan.md`
+Start the file with this frontmatter, setting `created` to today's date in `YYYY-MM-DD`:
 
-Use:
+---
+categories:
+  - "[[Clippings]]"
+author:
+  - "[[Claude]]"
+status: Planning
+created: <YYYY-MM-DD>
+tags:
+  - clippings
+---
 
-# Implementation Plan
+Then use:
+
+# <TICKET> — Implementation Plan
+
+Take the ticket key from the branch name (`{ticket}/{detail}`).
 
 ## Summary
 
