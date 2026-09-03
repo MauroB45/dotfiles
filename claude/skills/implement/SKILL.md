@@ -6,11 +6,11 @@ disable-model-invocation: true
 
 # Implement
 
-Read `notes/spec.md`, `notes/plan.md`, and relevant code.
+Read `spec.md` and `plan.md` from the notes directory, and relevant code.
 
 Implement the approved plan. Keep changes focused and follow existing project patterns.
 
-If `notes/plan.md` is absent or empty, the work came straight from `/investigate`. Agree a short ordered set of steps with the user first, then implement those. Do not create `notes/plan.md`.
+If `plan.md` is absent or empty, the work came straight from `/investigate`. Agree a short ordered set of steps with the user first, then implement those. Do not create `plan.md`.
 
 Before writing code, identify sensible commit boundaries (see **Commits**) and confirm them with the user.
 
@@ -19,7 +19,7 @@ For each step:
 - make the smallest coherent change
 - preserve type safety
 - update/add tests when behaviour changes
-- mark completed items in `notes/plan.md` when it exists
+- mark completed items in `plan.md` when it exists
 - run focused validation where useful
 
 If the plan is materially wrong, conflicts with the spec, or requires a significant change of direction, stop and explain rather than silently deviating.
@@ -49,7 +49,7 @@ Do not hide failures; distinguish introduced failures from existing ones.
 
 ## Complete
 
-Review the diff against `notes/spec.md` and `notes/plan.md`.
+Review the diff against `spec.md` and `plan.md`.
 
 Report:
 

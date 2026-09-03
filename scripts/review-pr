@@ -22,17 +22,31 @@ command -v jq >/dev/null || {
 
 if [[ -z "${OBSIDIAN_VAULT:-}" ]]; then
   echo "OBSIDIAN_VAULT is not configured"
+  echo "Set it in ~/.zshrc.local."
   exit 1
 fi
 
 REPO_NAME="${REPO##*/}"
 
-# Where your normal work repos live.
-REPO_PATH="$HOME/Code/work/$REPO_NAME"
+# A clone can be named differently from its GitHub repository. Map the two with
+# REPO_ALIASES in ~/.zshrc.local, e.g. "geppetto-sender-ui=sender-ui".
+DIR_NAME="$REPO_NAME"
+
+for ALIAS in ${REPO_ALIASES:-}; do
+  if [[ "${ALIAS%%=*}" == "$REPO_NAME" ]]; then
+    DIR_NAME="${ALIAS#*=}"
+    break
+  fi
+done
+
+# Where your repos live. Override CODE_ROOT to review a repo cloned elsewhere.
+CODE_ROOT="${CODE_ROOT:-$HOME/Code/work}"
+REPO_PATH="$CODE_ROOT/$DIR_NAME"
 
 if [[ ! -d "$REPO_PATH/.git" ]]; then
   echo "Repository not found: $REPO_PATH"
-  echo "Clone it before reviewing."
+  echo "Clone it before reviewing, set CODE_ROOT to where it lives, or map it"
+  echo "with REPO_ALIASES if the directory is named differently."
   exit 1
 fi
 
@@ -50,10 +64,10 @@ DELETIONS="$(jq -r '.deletions' <<<"$META")"
 CHANGED_FILES="$(jq -r '.changedFiles' <<<"$META")"
 BODY="$(jq -r '.body // ""' <<<"$META")"
 
-WORKTREE_ROOT="$HOME/Code/work/${REPO_NAME}-reviews"
+WORKTREE_ROOT="${REPO_PATH}-reviews"
 WORKTREE="$WORKTREE_ROOT/pr-$PR"
 
-NOTES_DIR="$OBSIDIAN_VAULT/Work/$REPO_NAME/Reviews/PR-$PR"
+NOTES_DIR="$OBSIDIAN_VAULT/Work/$DIR_NAME/Reviews/PR-$PR"
 REVIEW_DIR="$WORKTREE/review"
 REVIEW_FILE="$NOTES_DIR/review.md"
 
@@ -160,4 +174,6 @@ echo
 
 cd "$WORKTREE"
 
-exec claude "/review-pr"
+# The review symlink resolves outside the worktree, so Claude needs the real
+# path as a working directory to read it or write to it in the sandbox.
+exec claude --add-dir "$NOTES_DIR" "/review-pr"

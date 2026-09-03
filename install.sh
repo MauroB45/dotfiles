@@ -33,8 +33,9 @@ link "$DOTFILES/scripts/prs" "$HOME/.local/bin/prs"
 # Claude Code
 mkdir -p "$HOME/.claude"
 
-ln -sfn "$DOTFILES/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
-ln -sfn "$DOTFILES/claude/skills" "$HOME/.claude/skills"
+link "$DOTFILES/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
+link "$DOTFILES/claude/skills" "$HOME/.claude/skills"
+link "$DOTFILES/claude/settings.json" "$HOME/.claude/settings.json"
 
 # Machine-specific Git identity
 if [ ! -f "$HOME/.gitconfig-local" ]; then
@@ -45,6 +46,22 @@ if [ ! -f "$HOME/.gitconfig-local" ]; then
 EOF
 
   echo "⚠️  Created ~/.gitconfig-local — update your Git identity."
+fi
+
+# Machine-specific shell configuration, sourced by .zshrc
+if [ ! -f "$HOME/.zshrc.local" ]; then
+  cat > "$HOME/.zshrc.local" <<'EOF'
+# Obsidian vault, required by new-task and review-pr
+# export OBSIDIAN_VAULT="$HOME/Documents/Vault"
+
+# Where repos are cloned, used by review-pr to find one
+# export CODE_ROOT="$HOME/Code/work"
+
+# Clones whose directory name differs from the GitHub repository
+# export REPO_ALIASES="github-name=local-directory"
+EOF
+
+  echo "⚠️  Created ~/.zshrc.local — set OBSIDIAN_VAULT."
 fi
 
 link "$DOTFILES" "$HOME/.dotfiles"

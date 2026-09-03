@@ -95,6 +95,7 @@ done
 
 if [[ -z "${OBSIDIAN_VAULT:-}" ]]; then
   echo "OBSIDIAN_VAULT is not configured."
+  echo "Set it in ~/.zshrc.local."
   exit 1
 fi
 
@@ -125,7 +126,6 @@ WORKTREE_DIR="${BRANCH//\//-}"
 WORKTREE_PATH="${WORKTREE_ROOT}/${WORKTREE_DIR}"
 
 NOTES_DIR="${OBSIDIAN_VAULT}/Work/${REPO_NAME}/${TICKET}"
-NOTES_LINK="${WORKTREE_PATH}/notes"
 
 mkdir -p "$WORKTREE_ROOT"
 mkdir -p "$NOTES_DIR"
@@ -211,22 +211,6 @@ EOF
   echo "✓ Created session.md"
 fi
 
-# Link notes into worktree
-if [[ -e "$NOTES_LINK" || -L "$NOTES_LINK" ]]; then
-  echo "✓ notes link already exists"
-else
-  ln -s "$NOTES_DIR" "$NOTES_LINK"
-  echo "✓ Linked notes"
-fi
-
-# Ignore notes locally without modifying the repository's .gitignore
-EXCLUDE_FILE="$(git -C "$WORKTREE_PATH" rev-parse --git-path info/exclude)"
-
-if ! grep -qxF "notes" "$EXCLUDE_FILE" 2>/dev/null; then
-  echo "notes" >> "$EXCLUDE_FILE"
-  echo "✓ Ignored notes locally"
-fi
-
 cd "$WORKTREE_PATH"
 
 echo
@@ -234,4 +218,8 @@ echo "Ready:"
 echo "$WORKTREE_PATH"
 echo
 
-exec claude
+code .
+
+# The notes symlink resolves outside the worktree, so Claude needs the real
+# path as a working directory to read it or write to it in the sandbox.
+exec claude --add-dir "$NOTES_DIR"

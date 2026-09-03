@@ -59,7 +59,7 @@ Technical constraints that materially define behaviour may be included.
 
 ## Output
 
-Write to: `notes/spec.md`
+Write to: `spec.md` in the notes directory
 
 Preserve any existing `## Jira` section at the top of the file.
 
@@ -102,7 +102,7 @@ Only questions that genuinely prevent this specification from being considered s
 
 ## Freeze
 
-Once approved or sufficiently established, treat `notes/spec.md` as frozen.
+Once approved or sufficiently established, treat `spec.md` as frozen.
 
 Planning must not silently rewrite it to match implementation decisions.
 

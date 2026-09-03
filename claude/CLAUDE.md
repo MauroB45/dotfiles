@@ -8,6 +8,18 @@
 - Preserve existing repository conventions.
 - Follow relevant ADRs and use project domain terminology.
 
+## Task worktrees
+
+`new-task` and `review-pr` start a session in a Git worktree and pass the
+notes directory with `--add-dir`, so it is listed as an additional working
+directory. Resolve it from there rather than assuming a path.
+
+- for a ticket it holds `spec.md`, `plan.md` and `session.md`
+- for a pull request review it holds `review.md`
+- it lives outside the repository and is never committed
+- when no such directory is listed, the session was not started by either
+  script; keep the equivalent context in the conversation instead
+
 ## Changes
 
 - Keep changes scoped to the current task.
@@ -26,11 +38,15 @@
 
 When asked to prepare a commit:
 
-1. Draft the message in `/tmp/claude-commit-message`.
-2. Open it with `code /tmp/claude-commit-message`.
+1. Draft the message in `commit-message.md` in the notes directory, or in
+   `.commit-message` at the repository root when there is no notes directory.
+2. Open it with `code <path>`.
 3. Stop and wait for user approval.
-4. After approval, commit with `git commit -F /tmp/claude-commit-message`.
-5. Remove the temporary file after a successful commit.
+4. After approval, commit with `git commit -F <path>`.
+5. Remove the draft after a successful commit.
+
+Both paths are ignored by Git and readable by every tool. Do not draft in
+`/tmp`, which is outside the working directory.
 
 Commit messages should:
 
@@ -39,11 +55,33 @@ Commit messages should:
 - avoid implementation-detail noise
 - end with `Ticket: <ticket>`. Take from branch ({ticket}/{detail}) or ask the user
 
-Example:
+### Framing
+
+Match the framing to the kind of change.
+
+**New behaviour.** Explain what the change adds and why it is wanted. Write
+about the capability, not about an absence. Do not describe the previous
+behaviour as broken, and do not frame the work as a fix.
+
+**Bug fix.** Explain the problem before the change: what went wrong, and the
+conditions that trigger it. Then explain how it was fixed.
+
+Feature example:
 
 Add manifest date validation
 
-Prevent past dispatch dates from being selected when creating a
-manifest while preserving existing behaviour for historical records.
+Dispatch dates drive the carrier booking, so a sender needs the date they
+pick to be one the depot can service. Restrict the picker to valid dispatch
+dates, leaving historical records editable.
+
+Ticket: GEPPIE-XXXX
+
+Bug fix example:
+
+Fix quote voiding on every keystroke
+
+The quoted-on watcher fired on any change to its inputs, so typing in
+Description reported a void even when no premium had been held. Guard the
+emit on a held premium, so a void is reported only when one is voided.
 
 Ticket: GEPPIE-XXXX

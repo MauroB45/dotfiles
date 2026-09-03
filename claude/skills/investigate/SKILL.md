@@ -6,9 +6,9 @@ disable-model-invocation: true
 
 # Investigate
 
-Investigate and grill (/grilling) the problem using the relevant code. Do not modify code or create artifacts.
+Investigate and grill (read /grilling) to get to a common understanding with no outstanding questions. Use the grilling approach (recommendation). Do not modify code or create artifacts.
 
-Read the ticket/conversation, `CLAUDE.md`, relevant docs/ADRs, code and tests.
+Read the ticket, conversation, `CLAUDE.md`, relevant docs/ADRs, code and tests.
 
 Determine:
 
@@ -16,7 +16,6 @@ Determine:
 - relevant architecture and data flow
 - existing patterns/prior art
 - constraints and edge cases
-- existing test seams
 - unresolved questions that materially affect the solution
 
 Use project/domain terminology. Separate facts from assumptions. Don't invent requirements.
@@ -35,8 +34,8 @@ Recommend the appropriate next step:
 
 Finally, ask whether the user wants to:
 
-1. **Keep in context** — leave the investigation in the current conversation and continue working from it. 
-2. **Capture** — persist the important investigation context before continuing (`notes/investigation.md`)
+1. **Keep in context** — leave the investigation in the current conversation and continue working from it.
+2. **Capture** — persist the important investigation context before continuing (`investigation.md` in the notes directory)
 
 Do not create an investigation artifact unless the user chooses to capture it.
 
@@ -44,17 +43,22 @@ Do not create an investigation artifact unless the user chooses to capture it.
 # Investigation
 
 ## Problem
+
 Current and expected behaviour, and why the change is needed.
 
 ## Architecture
+
 Relevant components, boundaries and data flow.
 
 ## Prior Art
+
 Existing patterns and tests worth following.
 
 ## Constraints & Risks
+
 Important constraints, edge cases and regression risks.
 
 ## Open Questions
+
 Only questions that materially affect the solution.
 </investigation-template>

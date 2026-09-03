@@ -14,7 +14,7 @@ The goal is to prepare the human reviewer, not replace them.
 
 Read:
 
-- `review/review.md`
+- `review.md` in the review directory
 - the PR diff
 - relevant surrounding source code
 - existing tests
@@ -77,7 +77,7 @@ Every finding must reference the relevant file and line/range.
 
 ## Output
 
-Update `review/review.md`.
+Update `review.md` in the review directory.
 
 Preserve the `My notes` section if it already contains human-written notes.
 

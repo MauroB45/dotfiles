@@ -10,10 +10,10 @@ Create an implementation-ready technical plan from the frozen specification. Do 
 
 Read:
 
-- `notes/spec.md`
+- `spec.md` in the notes directory
 - relevant documentation and ADRs
 
-Treat `notes/spec.md` as the source of truth.
+Treat `spec.md` as the source of truth.
 
 ## Validate understanding
 
@@ -24,7 +24,7 @@ Build on the investigation rather than repeating it. Confirm only what planning 
 - relevant existing tests
 - technical risks and regressions
 
-`/spec` owns scope assessment. If planning exposes that the work is genuinely several independently deliverable behaviours, stop before writing `notes/plan.md`, explain why, and recommend `/to-tickets`.
+`/spec` owns scope assessment. If planning exposes that the work is genuinely several independently deliverable behaviours, stop before writing `plan.md`, explain why, and recommend `/to-tickets`.
 
 ## Testing strategy
 
@@ -73,7 +73,7 @@ Avoid:
 
 ## Output
 
-After test-seam confirmation, create `notes/plan.md`. It does not exist yet.
+After test-seam confirmation, create `plan.md` in the notes directory. It does not exist yet.
 
 Start the file with this frontmatter, setting `created` to today's date in `YYYY-MM-DD`:
 
@@ -144,7 +144,7 @@ Reiterate adjacent work that must not leak into implementation.
 
 ## Completion
 
-Check every requirement in `notes/spec.md`.
+Check every requirement in `spec.md`.
 
 Each requirement must be accounted for by:
 

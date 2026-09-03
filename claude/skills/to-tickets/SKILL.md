@@ -7,7 +7,7 @@ disable-model-invocation: true
 Break the current conversation, spec or plan into small, independently deliverable tickets. Do not implement.
 
 Read:
-- `notes/spec.md`
+- `spec.md` in the notes directory
 - current conversation and investigation context
 - relevant project context
 - `CLAUDE.md`
