@@ -222,4 +222,34 @@ code .
 
 # The notes symlink resolves outside the worktree, so Claude needs the real
 # path as a working directory to read it or write to it in the sandbox.
-exec claude --add-dir "$NOTES_DIR"
+claude --add-dir "$NOTES_DIR" || true
+
+# Removing the worktree you are standing in fails, so only offer it when
+# new-task was run from another checkout.
+if [[ "$REPO_ROOT" == "$WORKTREE_PATH" ]]; then
+  exit 0
+fi
+
+echo
+read -r -p "Remove $WORKTREE_PATH? [y/N] " REMOVE
+
+if [[ "$REMOVE" == [yY] ]]; then
+  cd "$REPO_ROOT"
+
+  # The copied .env.local and .claude are untracked unless the repository
+  # ignores them, so a plain remove can refuse. Show what is there first.
+  if ! git worktree remove "$WORKTREE_PATH"; then
+    echo
+    git -C "$WORKTREE_PATH" status --short
+    echo
+    read -r -p "Force remove and discard these changes? [y/N] " FORCE
+
+    if [[ "$FORCE" != [yY] ]]; then
+      exit 0
+    fi
+
+    git worktree remove --force "$WORKTREE_PATH"
+  fi
+
+  echo "Removed $WORKTREE_PATH (branch $BRANCH kept)"
+fi

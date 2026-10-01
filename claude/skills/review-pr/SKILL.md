@@ -14,7 +14,7 @@ The goal is to prepare the human reviewer, not replace them.
 
 Read:
 
-- `review.md` in the review directory
+- `.claude/review.md` at the worktree root
 - the PR diff
 - relevant surrounding source code
 - existing tests
@@ -75,9 +75,19 @@ Classify each finding as:
 
 Every finding must reference the relevant file and line/range.
 
+## Re-reviews
+
+When `review.md` records a reviewed commit, this is a later round:
+
+- focus on the changes since that commit
+- mark each earlier finding as Addressed or Outstanding
+- if the commit is no longer reachable, say so and review the whole PR
+
 ## Output
 
-Update `review.md` in the review directory.
+Update `.claude/review.md` at the worktree root.
+
+Set **Reviewed commit** to the commit you reviewed.
 
 Preserve the `My notes` section if it already contains human-written notes.
 

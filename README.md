@@ -53,11 +53,11 @@ export CODE_ROOT="$HOME/Code/work"
 export REPO_ALIASES="geppetto-sender-ui=sender-ui"
 ```
 
-`OBSIDIAN_VAULT` points at the Obsidian vault holding ticket and review notes. Both `new-task` and `review-pr` exit without it.
+`OBSIDIAN_VAULT` points at the Obsidian vault holding ticket notes and review logs. `new-task` and `review-pr --done` exit without it.
 
 `CODE_ROOT` is where repositories are cloned. Only `review-pr` uses it, to find the clone for a pull request, and it defaults to `~/Code/work`.
 
-`REPO_ALIASES` maps a GitHub repository to the directory it is cloned into, as a space-separated list of `github-name=local-directory` pairs. `review-pr` is given a GitHub repository name, so it needs the mapping to find a clone whose directory is named differently. The local directory name is also the vault folder, which keeps a project's tickets and reviews together.
+`REPO_ALIASES` maps a GitHub repository to the directory it is cloned into, as a space-separated list of `github-name=local-directory` pairs. `review-pr` is given a GitHub repository name, so it needs the mapping to find a clone whose directory is named differently. The local directory name is also the vault folder, which keeps a project's tickets and review log together.
 
 ## Structure
 

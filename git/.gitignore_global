@@ -1,4 +1,5 @@
 .DS_Store
-.commit-message
 
+**/.claude/commit-message
+**/.claude/review.md
 **/.claude/.cc-writes/

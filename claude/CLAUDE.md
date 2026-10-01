@@ -8,14 +8,50 @@
 - Preserve existing repository conventions.
 - Follow relevant ADRs and use project domain terminology.
 
+## Responses
+
+Shape responses so I can act on them, not just read them.
+Working memory is small, starting is the hardest step, buried wins do not register.
+
+- Challenge my approach when you see a better alternative. Say so before
+  acting, give the trade-off in a line, and recommend one. Do not agree just
+  to keep things moving.
+- Lead with the action: a command, path or snippet I can act on now.
+  Context comes after, if at all.
+- Number multi-step work: one bounded action per step, fewest steps that
+  work. Use the task tool when available instead of narrating the plan.
+- Restate state each turn: "Step 3 of 5 done: schema updated. Next:
+  backfill the column."
+- Show what now works, in concrete terms, and how to see it.
+- Park tangents: finish the current thing, then offer the other issue as a
+  separate question. Answer mid-work questions yourself when you can.
+- Be specific about time: "about 15 minutes if tests cover it, an afternoon
+  if not".
+- State errors plainly: location, cause, fix.
+- Keep visible lists to around five items per group, ranked. Never drop
+  relevant items from the analysis itself.
+- No preamble, no recap, no closing pleasantries.
+- When anything is left open, end with one next action doable in under two
+  minutes.
+
+Break these when:
+
+- I ask to explain or walk through something: go as long as it needs, with
+  headings to skim back to.
+- An action is destructive: confirm first. Safety first.
+- Three turns in a row are "still broken": stop changing code, name the
+  assumption that may be wrong, and ask one diagnostic question.
+- The request is genuinely ambiguous: ask one short question.
+- I ask for options: give 2 to 4 ranked options, recommendation first.
+
 ## Task worktrees
 
-`new-task` and `review-pr` start a session in a Git worktree and pass the
-notes directory with `--add-dir`, so it is listed as an additional working
+`new-task` and `review-pr --done` start a session in a Git worktree and pass
+the notes directory with `--add-dir`, so it is listed as an additional working
 directory. Resolve it from there rather than assuming a path.
 
 - for a ticket it holds `spec.md`, `plan.md` and `session.md`
-- for a pull request review it holds `review.md`
+- for a finished pull request review it holds the repository's `review-log.md`
 - it lives outside the repository and is never committed
 - when no such directory is listed, the session was not started by either
   script; keep the equivalent context in the conversation instead
@@ -38,15 +74,15 @@ directory. Resolve it from there rather than assuming a path.
 
 When asked to prepare a commit:
 
-1. Draft the message in `commit-message.md` in the notes directory, or in
-   `.commit-message` at the repository root when there is no notes directory.
-2. Open it with `code <path>`.
-3. Stop and wait for user approval.
-4. After approval, commit with `git commit -F <path>`.
-5. Remove the draft after a successful commit.
+1. Draft the message in `.claude/commit-message`, creating `.claude` if
+   it does not exist.
+2. Say the draft is ready and stop. The user edits and approves it there.
+3. After approval, commit with `git commit -F .claude/commit-message`.
+4. Remove the draft after a successful commit.
 
-Both paths are ignored by Git and readable by every tool. Do not draft in
-`/tmp`, which is outside the working directory.
+The path sits inside the repository, so it is already in the open editor
+window and needs no command to open it. It is ignored by Git. Do not draft
+in `/tmp`, which is outside the working directory.
 
 Commit messages should:
 

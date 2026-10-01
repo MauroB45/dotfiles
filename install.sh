@@ -51,7 +51,7 @@ fi
 # Machine-specific shell configuration, sourced by .zshrc
 if [ ! -f "$HOME/.zshrc.local" ]; then
   cat > "$HOME/.zshrc.local" <<'EOF'
-# Obsidian vault, required by new-task and review-pr
+# Obsidian vault, required by new-task and review-pr --done
 # export OBSIDIAN_VAULT="$HOME/Documents/Vault"
 
 # Where repos are cloned, used by review-pr to find one
