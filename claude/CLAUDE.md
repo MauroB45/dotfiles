@@ -46,12 +46,12 @@ Break these when:
 
 ## Task worktrees
 
-`new-task` and `review-pr --done` start a session in a Git worktree and pass
-the notes directory with `--add-dir`, so it is listed as an additional working
+`new-task` and `review-pr` start a session in a Git worktree and pass the
+notes directory with `--add-dir`, so it is listed as an additional working
 directory. Resolve it from there rather than assuming a path.
 
 - for a ticket it holds `spec.md`, `plan.md` and `session.md`
-- for a finished pull request review it holds the repository's `review-log.md`
+- for a pull request review it holds the repository's `review-log.md`
 - it lives outside the repository and is never committed
 - when no such directory is listed, the session was not started by either
   script; keep the equivalent context in the conversation instead
@@ -76,7 +76,8 @@ When asked to prepare a commit:
 
 1. Draft the message in `.claude/commit-message`, creating `.claude` if
    it does not exist.
-2. Say the draft is ready and stop. The user edits and approves it there.
+2. Show it with `cat .claude/commit-message`, then stop. The user approves
+   it as is or edits it there.
 3. After approval, commit with `git commit -F .claude/commit-message`.
 4. Remove the draft after a successful commit.
 

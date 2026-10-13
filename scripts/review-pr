@@ -58,25 +58,17 @@ WORKTREE="$WORKTREE_ROOT/pr-$PR"
 # goes with it. Git ignores it through the global ignore file.
 REVIEW_FILE="$WORKTREE/.claude/review.md"
 
-if [[ "$DONE" == true ]]; then
-  if [[ -z "${OBSIDIAN_VAULT:-}" ]]; then
-    echo "OBSIDIAN_VAULT is not configured"
-    echo "Set it in ~/.zshrc.local."
-    exit 1
-  fi
+if [[ -z "${OBSIDIAN_VAULT:-}" ]]; then
+  echo "OBSIDIAN_VAULT is not configured"
+  echo "Set it in ~/.zshrc.local."
+  exit 1
+fi
 
-  if [[ ! -d "$WORKTREE" ]]; then
-    echo "Review worktree not found: $WORKTREE"
-    exit 1
-  fi
+# What outlives a review is the retro entry in the repository's review log.
+NOTES_DIR="$OBSIDIAN_VAULT/Work/$DIR_NAME/Reviews"
+mkdir -p "$NOTES_DIR"
 
-  # What outlives a review is the retro entry in the repository's review log.
-  NOTES_DIR="$OBSIDIAN_VAULT/Work/$DIR_NAME/Reviews"
-  mkdir -p "$NOTES_DIR"
-
-  cd "$WORKTREE"
-  claude --add-dir "$NOTES_DIR" "/review-retro $REPO $PR"
-
+offer_removal() {
   echo
   read -r -p "Remove $WORKTREE? [y/N] " REMOVE
 
@@ -85,7 +77,17 @@ if [[ "$DONE" == true ]]; then
     git worktree remove "$WORKTREE"
     echo "Removed $WORKTREE"
   fi
+}
 
+if [[ "$DONE" == true ]]; then
+  if [[ ! -d "$WORKTREE" ]]; then
+    echo "Review worktree not found: $WORKTREE"
+    exit 1
+  fi
+
+  cd "$WORKTREE"
+  claude --add-dir "$NOTES_DIR" "/review-retro $REPO $PR"
+  offer_removal
   exit 0
 fi
 
@@ -185,7 +187,9 @@ echo
 echo "Worktree: $WORKTREE"
 echo "Review:   $REVIEW_FILE"
 echo
-echo "When the review is finished: review-pr --done $REPO $PR"
+echo "When the review is finished: /review-retro $REPO $PR, then quit"
+echo "To finish later instead:      review-pr --done $REPO $PR"
 echo
 
-exec claude "/review-pr"
+claude --add-dir "$NOTES_DIR" "/review-pr"
+offer_removal
