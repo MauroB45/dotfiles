@@ -35,6 +35,10 @@ Sort into:
 - **Noise:** a finding the reviewer did not raise
 - **Missed:** something the reviewer raised that no finding covered
 
+A finding in the Optional tier that the reviewer did not raise is expected,
+not Noise. Count it as Noise only if the reviewer says it should have been left
+out entirely.
+
 Then ask the reviewer, in one short message:
 
 - for each Noise finding, whether it was wrong, not worth raising, or raised
@@ -51,7 +55,8 @@ needed:
 ```markdown
 ## #<PR> <title> · <YYYY-MM-DD>
 
-- Posted: <n> of <total> findings
+- Posted: <n> of <total> Post-tier findings
+- Optional: <n> findings, <n> of them raised anyway
 - Missed: <pattern>
 - Noise: <pattern>, <why>
 ```
@@ -59,6 +64,14 @@ needed:
 Describe each Missed and Noise item as a pattern that could apply to another
 PR, not only as what happened in this one. Leave out lines with nothing to
 record.
+
+## Lessons
+
+`review-lessons.md` in the notes directory distils the log into what to
+raise, label optional or not raise. After logging, propose the changes this
+entry implies: a new lesson, a PR reference added to an existing one, or a
+lesson to drop because the reviewer contradicted it. Apply them once the
+reviewer agrees. Keep each lesson to a reusable pattern with its PR numbers.
 
 Do not post to GitHub.
 Do not modify source code.

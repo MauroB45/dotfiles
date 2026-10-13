@@ -51,7 +51,8 @@ notes directory with `--add-dir`, so it is listed as an additional working
 directory. Resolve it from there rather than assuming a path.
 
 - for a ticket it holds `spec.md`, `plan.md` and `session.md`
-- for a pull request review it holds the repository's `review-log.md`
+- for a pull request review it holds the repository's `review-log.md` and
+  `review-lessons.md`
 - it lives outside the repository and is never committed
 - when no such directory is listed, the session was not started by either
   script; keep the equivalent context in the conversation instead

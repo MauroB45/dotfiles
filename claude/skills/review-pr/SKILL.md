@@ -19,6 +19,10 @@ Read:
 - relevant surrounding source code
 - existing tests
 - project-level `CLAUDE.md` if present and code style
+- `review-lessons.md` in the notes directory, if present
+
+The lessons record what this reviewer posts, labels optional or drops, learnt
+from earlier retros. Apply them when classifying and tiering findings.
 
 ## Review priorities
 
@@ -74,6 +78,15 @@ Classify each finding as:
 - Suggestion
 
 Every finding must reference the relevant file and line/range.
+
+Split the Findings section into two tiers:
+
+- **Post:** worth raising on the PR
+- **Optional:** valid but not worth posting, such as pre-existing patterns the
+  PR only extends, test hardening on a small fix, or low-priority polish
+
+Keep Optional findings in the doc. The reviewer wants to see them, even when
+they are not posted.
 
 ## Re-reviews
 
