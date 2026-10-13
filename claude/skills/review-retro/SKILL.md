@@ -21,6 +21,10 @@ time.
   - review bodies: `gh pr view <PR> --repo <REPO> --json reviews`
   - inline comments: `gh api repos/<REPO>/pulls/<PR>/comments --paginate`
 
+Run each `gh` command on its own, with no pipe, `&&`, `cd`, redirect or
+`$(...)`. Only a bare `gh` command runs outside the sandbox; anything else
+fails TLS verification. Use `--jq` to filter instead of piping to `jq`.
+
 Only count comments written by the reviewer.
 
 ## Compare

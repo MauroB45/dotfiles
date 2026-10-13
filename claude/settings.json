@@ -1,12 +1,22 @@
 {
   "theme": "dark",
   "permissions": {
+    "allow": [
+      "Bash(gh api:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr diff:*)",
+      "Bash(gh pr checkout:*)"
+    ],
     "ask": [
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(gh pr review:*)",
+      "Bash(gh pr comment:*)",
+      "Bash(gh pr merge:*)"
     ]
   },
   "sandbox": {
     "enabled": true,
+    "excludedCommands": ["gh *"],
     "autoAllowBashIfSandboxed": true,
     "allowUnsandboxedCommands": false,
     "network": {
