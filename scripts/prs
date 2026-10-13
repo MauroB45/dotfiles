@@ -17,26 +17,59 @@ command -v fzf >/dev/null || {
   exit 1
 }
 
+HERE=false
+
+case "${1:-}" in
+  --here) HERE=true ;;
+  "") ;;
+  *)
+    echo "Usage: prs [--here]"
+    exit 1
+    ;;
+esac
+
 # How many `gh pr view` lookups to run at once.
 CONCURRENCY="${PRS_CONCURRENCY:-8}"
 
-REVIEW_REQUESTED="$(
-  gh search prs \
-    --review-requested=@me \
-    --state=open \
-    --limit=50 \
-    --json number,title,repository,author,updatedAt,isDraft,url,labels |
-  jq 'map(. + {reason: "REVIEW"})'
-)"
+if [[ "$HERE" == true ]]; then
+  CURRENT_REPO="$(gh repo view --json nameWithOwner --jq .nameWithOwner)"
+  HEADER="$CURRENT_REPO PRs"
+  EMPTY="No open PRs in $CURRENT_REPO"
 
-ASSIGNED="$(
-  gh search prs \
-    --assignee=@me \
-    --state=open \
-    --limit=50 \
-    --json number,title,repository,author,updatedAt,isDraft,url,labels |
-  jq 'map(. + {reason: "ASSIGNED"})'
-)"
+  # gh pr list omits the repository, so add it to match the search results.
+  SOURCES="$(
+    gh pr list \
+      --repo "$CURRENT_REPO" \
+      --state=open \
+      --limit=100 \
+      --json number,title,author,updatedAt,isDraft,url,labels |
+    jq --arg repo "$CURRENT_REPO" \
+      'map(. + {repository: {nameWithOwner: $repo}, reason: "OPEN"})'
+  )"
+else
+  HEADER="PR inbox"
+  EMPTY="No PRs waiting for you 🎉"
+
+  REVIEW_REQUESTED="$(
+    gh search prs \
+      --review-requested=@me \
+      --state=open \
+      --limit=50 \
+      --json number,title,repository,author,updatedAt,isDraft,url,labels |
+    jq 'map(. + {reason: "REVIEW"})'
+  )"
+
+  ASSIGNED="$(
+    gh search prs \
+      --assignee=@me \
+      --state=open \
+      --limit=50 \
+      --json number,title,repository,author,updatedAt,isDraft,url,labels |
+    jq 'map(. + {reason: "ASSIGNED"})'
+  )"
+
+  SOURCES="$REVIEW_REQUESTED"$'\n'"$ASSIGNED"
+fi
 
 # Dependabot and design PRs are noise in the review inbox.
 PRS="$(
@@ -56,13 +89,13 @@ PRS="$(
       )
     | sort_by(.updatedAt)
     | reverse
-  ' <<<"$REVIEW_REQUESTED"$'\n'"$ASSIGNED"
+  ' <<<"$SOURCES"
 )"
 
 COUNT="$(jq 'length' <<<"$PRS")"
 
 if [[ "$COUNT" -eq 0 ]]; then
-  echo "No PRs waiting for you 🎉"
+  echo "$EMPTY"
   exit 0
 fi
 
@@ -120,7 +153,7 @@ SELECTION="$(
   ' <<<"$PRS" |
   column -t -s $'\t' |
   fzf \
-    --header="PR inbox" \
+    --header="$HEADER" \
     --prompt="Review > " \
     --height=80% \
     --reverse
