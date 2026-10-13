@@ -1,2 +1,5 @@
 .DS_Store
 claude/skills/synced/
+# Written by Claude Code each time it loads a mod
+claude/mods/*/.claude-plugin/types/
+claude/mods/*/tsconfig.json

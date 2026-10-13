@@ -25,6 +25,9 @@ eval "$(fnm env --use-on-cd --shell zsh)"
 # GPG
 export GPG_TTY=$(tty)
 
+# Claude Code mods, loaded in every session
+export CLAUDE_CODE_PLUGIN_DIRS="$HOME/.claude/mods/context-bar"
+
 # Aliases
 source "$HOME/.dotfiles/zsh/aliases.zsh"
 
