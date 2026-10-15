@@ -64,6 +64,12 @@ directory. Resolve it from there rather than assuming a path.
 - Never hide, ignore, or work around failing validation without explaining why.
 - Distinguish failures introduced by your changes from pre-existing failures.
 
+## Domain knowledge
+
+- Don't save business rules to memory. Propose them for the repository's
+  `domain.md` at `$OBSIDIAN_VAULT/Work/<repo>/domain.md`, and write them
+  once I agree.
+
 ## Git
 
 - Never commit, push, force-push, merge, rebase, or otherwise modify remote state unless explicitly requested.

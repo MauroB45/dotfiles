@@ -93,7 +93,7 @@ fi
 
 META="$(gh pr view "$PR" \
   --repo "$REPO" \
-  --json number,title,body,url,author,baseRefName,headRefName,additions,deletions,changedFiles,isDraft,reviewDecision,files)"
+  --json number,title,url,author,baseRefName,headRefName,additions,deletions,changedFiles,isDraft,reviewDecision,files)"
 
 TITLE="$(jq -r '.title' <<<"$META")"
 AUTHOR="$(jq -r '.author.login' <<<"$META")"
@@ -103,7 +103,6 @@ URL="$(jq -r '.url' <<<"$META")"
 ADDITIONS="$(jq -r '.additions' <<<"$META")"
 DELETIONS="$(jq -r '.deletions' <<<"$META")"
 CHANGED_FILES="$(jq -r '.changedFiles' <<<"$META")"
-BODY="$(jq -r '.body // ""' <<<"$META")"
 
 mkdir -p "$WORKTREE_ROOT"
 
@@ -138,10 +137,6 @@ if [[ ! -f "$REVIEW_FILE" ]]; then
 - **Changes:** $CHANGED_FILES files, +$ADDITIONS / -$DELETIONS
 - **PR:** $URL
 - **Reviewed commit:** _Not reviewed yet._
-
-## Description
-
-$BODY
 
 ## Changed files
 

@@ -15,11 +15,17 @@ The goal is to prepare the human reviewer, not replace them.
 Read:
 
 - `.claude/review.md` at the worktree root
+- the PR description, with `gh pr view <PR URL> --json body`, taking the URL
+  from the Context section of `review.md`. Don't copy it into the doc.
 - the PR diff
 - relevant surrounding source code
 - existing tests
 - project-level `CLAUDE.md` if present and code style
 - `review-lessons.md` in the notes directory, if present
+
+Run each `gh` command on its own, with no pipe, `;`, `&&`, `cd`, redirect or
+`$(...)`. Only a bare `gh` command runs outside the sandbox; anything else
+fails TLS verification. Use `-q` to filter instead of piping to `jq`.
 
 The lessons record what this reviewer posts, labels optional or drops, learnt
 from earlier retros. Apply them when classifying and tiering findings.
@@ -95,6 +101,10 @@ When `review.md` records a reviewed commit, this is a later round:
 - focus on the changes since that commit
 - mark each earlier finding as Addressed or Outstanding
 - if the commit is no longer reachable, say so and review the whole PR
+- at the top of Findings, keep one ranked "Outstanding at `<commit>`" table
+  (type, item, file:line, ask or fix) followed by a one-line Resolved list;
+  rewrite it every round so the reviewer never has to merge rounds by hand
+- keep each round's detail below that table as history
 
 ## Output
 

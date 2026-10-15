@@ -68,10 +68,18 @@ record.
 ## Lessons
 
 `review-lessons.md` in the notes directory distils the log into what to
-raise, label optional or not raise. After logging, propose the changes this
-entry implies: a new lesson, a PR reference added to an existing one, or a
-lesson to drop because the reviewer contradicted it. Apply them once the
-reviewer agrees. Keep each lesson to a reusable pattern with its PR numbers.
+raise, label optional or not raise.
+
+Do not propose lesson changes after every retro. Count the log entries below
+the last `<!-- Lessons distilled -->` line in `review-log.md`, or all entries
+if there is none. Under 5, stop after logging and say how many are pending.
+
+At 5 or more, propose the changes those entries imply together: a new lesson,
+PR references added to an existing one, or a lesson to drop because the
+reviewer contradicted it. Prefer patterns that recur across entries over
+one-offs. Apply them once the reviewer agrees, then append
+`<!-- Lessons distilled -->` to `review-log.md`. Keep each lesson to a
+reusable pattern with its PR numbers.
 
 Do not post to GitHub.
 Do not modify source code.
