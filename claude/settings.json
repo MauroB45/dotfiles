@@ -28,6 +28,9 @@
       ]
     },
     "filesystem": {
+      "allowWrite": [
+        "~/.local/state/fnm_multishells"
+      ],
       "denyRead": [
         "~/.ssh",
         "~/.aws",
