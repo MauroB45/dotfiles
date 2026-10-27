@@ -83,8 +83,9 @@ When asked to prepare a commit:
 
 1. Draft the message in `.claude/commit-message`, creating `.claude` if
    it does not exist.
-2. Show it with `cat .claude/commit-message`, then stop. The user approves
-   it as is or edits it there.
+2. Paste the full message into your reply as a fenced code block, then stop.
+   Tool output is not reliably visible to me, so running `cat` alone does not
+   count as showing it. I approve it as is or edit the file.
 3. After approval, commit with `git commit -F .claude/commit-message`.
 4. Remove the draft after a successful commit.
 
