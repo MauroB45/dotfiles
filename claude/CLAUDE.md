@@ -64,18 +64,29 @@ directory. Resolve it from there rather than assuming a path.
 - Never hide, ignore, or work around failing validation without explaining why.
 - Distinguish failures introduced by your changes from pre-existing failures.
 
-## Domain knowledge
+## Memory
 
-- Don't save business rules to memory. Propose them for the repository's
+- Avoid memory. When something seems worth keeping, first look for a home
+  where I can see and edit it: the repository's `CLAUDE.md` or docs, the
+  task notes directory, or a skill. Propose that, and write it once I agree.
+- Save to memory only when I ask, or after asking and hearing that no other
+  home fits.
+- Business rules never go to memory. Propose them for the repository's
   `domain.md` at `$OBSIDIAN_VAULT/Work/<repo>/domain.md`, and write them
   once I agree.
 
 ## Git
 
-- Never commit, push, force-push, merge, rebase, or otherwise modify remote state unless explicitly requested.
+- Never run `git commit` yourself. I commit from my own terminal, using the
+  command you give me (see **Commit messages**).
+- Never push, force-push, merge, rebase, or otherwise modify remote state unless explicitly requested.
 - Never amend existing commits unless explicitly requested.
 - Review the diff before preparing a commit.
 - Always ask before updating a PR template
+- Run `gh` as a bare command, never after `cd`, `&&`, `$(...)` or before a
+  pipe. Only a bare `gh` skips the sandbox; inside it, TLS and the keychain
+  are blocked. Use `-R owner/repo`, `--jq` and `--template` instead, and
+  pipe its output in a separate call if needed.
 
 ### Commit messages
 
@@ -86,8 +97,17 @@ When asked to prepare a commit:
 2. Paste the full message into your reply as a fenced code block, then stop.
    Tool output is not reliably visible to me, so running `cat` alone does not
    count as showing it. I approve it as is or edit the file.
-3. After approval, commit with `git commit -F .claude/commit-message`.
-4. Remove the draft after a successful commit.
+3. Below the message, give one command in a fenced code block that I can
+   paste into a terminal at the repository root. It stages exactly the
+   files for this commit, commits with the draft and removes it, for example:
+
+   ```sh
+   git add path/one path/two && git commit -F .claude/commit-message && rm .claude/commit-message
+   ```
+
+   Do not run it. If other changes are already staged, say so and include
+   what is needed to keep them out of the commit.
+4. Once I say it is committed, check with `git log -1` and continue.
 
 The path sits inside the repository, so it is already in the open editor
 window and needs no command to open it. It is ignored by Git. Do not draft

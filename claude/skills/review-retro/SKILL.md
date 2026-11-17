@@ -20,6 +20,7 @@ time.
   - the reviewer's login: `gh api user --jq .login`
   - review bodies: `gh pr view <PR> --repo <REPO> --json reviews`
   - inline comments: `gh api repos/<REPO>/pulls/<PR>/comments --paginate`
+  - conversation comments: `gh api repos/<REPO>/issues/<PR>/comments --paginate`
 
 Run each `gh` command on its own, with no pipe, `&&`, `cd`, redirect or
 `$(...)`. Only a bare `gh` command runs outside the sandbox; anything else
@@ -29,15 +30,21 @@ Only count comments written by the reviewer.
 
 ## Compare
 
-Sort into:
+`review-pr` groups findings into "Post on the PR", "Waiting on…", "Done /
+Dropped" and "Optional", numbered `F1`, `F2`… Sort the findings, by number,
+into:
 
-- **Posted:** a finding the reviewer raised on the PR
-- **Noise:** a finding the reviewer did not raise
+- **Posted:** a "Post on the PR" finding the reviewer raised
+- **Noise:** a "Post on the PR" finding the reviewer did not raise
 - **Missed:** something the reviewer raised that no finding covered
 
-A finding in the Optional tier that the reviewer did not raise is expected,
-not Noise. Count it as Noise only if the reviewer says it should have been left
+Do not count "Waiting on…" or Optional findings as Noise. One the reviewer
+raised on the PR anyway counts as raised. Count an
+Optional finding as Noise only if the reviewer says it should have been left
 out entirely.
+
+Reviews started before this layout split findings into a Post tier and an
+Optional tier. Treat the Post tier as "Post on the PR".
 
 Then ask the reviewer, in one short message:
 
@@ -55,7 +62,7 @@ needed:
 ```markdown
 ## #<PR> <title> · <YYYY-MM-DD>
 
-- Posted: <n> of <total> Post-tier findings
+- Posted: <n> of <total> "Post on the PR" findings (<numbers>)
 - Optional: <n> findings, <n> of them raised anyway
 - Missed: <pattern>
 - Noise: <pattern>, <why>
@@ -72,9 +79,9 @@ raise, label optional or not raise.
 
 Do not propose lesson changes after every retro. Count the log entries below
 the last `<!-- Lessons distilled -->` line in `review-log.md`, or all entries
-if there is none. Under 5, stop after logging and say how many are pending.
+if there is none. Under 15, stop after logging and say how many are pending.
 
-At 5 or more, propose the changes those entries imply together: a new lesson,
+At 15 or more, propose the changes those entries imply together: a new lesson,
 PR references added to an existing one, or a lesson to drop because the
 reviewer contradicted it. Prefer patterns that recur across entries over
 one-offs. Apply them once the reviewer agrees, then append

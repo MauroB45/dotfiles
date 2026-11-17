@@ -57,7 +57,7 @@ Report:
 - validation performed
 - remaining risks or incomplete items
 
-Do not commit or push unless explicitly requested.
+Never run `git commit`; give me the command instead. Do not push unless explicitly requested.
 
 ## Commits
 
@@ -81,7 +81,19 @@ At each boundary:
 
 1. run focused validation
 2. review the diff
-3. prepare the commit message following the procedure in `CLAUDE.md`, which includes waiting for approval
-4. commit, then continue
+3. prepare the commit message following the procedure in `CLAUDE.md`, and present it with a review brief (see **Review brief**) before waiting for approval
+4. give me the commit command and wait until I say it is committed, then continue
 
 Do not force one commit per checklist item.
+
+## Review brief
+
+Make the commit easy to review before approval. Above the draft message, give:
+
+- **Change**: the behaviour this commit adds or fixes, in a sentence or two
+- **Strategy**: how it was done and why, including any alternative considered and rejected
+- **Where to look**: files in the order to read them, one line each on what changed and what to check
+- **Validation**: what was run and the result
+- **Risks**: anything uncertain, deferred or worth a closer look
+
+Point to `file_path:line_number` for the parts that need judgement.

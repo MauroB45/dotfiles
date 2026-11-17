@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# Claude Code's shell snapshot keeps whichever Node was active when it was
+# taken and drops fnm's cd hook, so a session can run the default Node
+# instead of the project's. Select the version from the project's version
+# file once, and persist it for the session's Bash commands.
+
+[[ -n "${CLAUDE_ENV_FILE:-}" ]] || exit 0
+command -v fnm >/dev/null || exit 0
+cd "${CLAUDE_PROJECT_DIR:-$PWD}" || exit 0
+[[ -f .nvmrc || -f .node-version ]] || exit 0
+
+FNM_ENV="$(fnm env --shell bash)" || exit 0
+eval "$FNM_ENV"
+fnm use --silent-if-unchanged >/dev/null 2>&1 || exit 0
+
+echo "$FNM_ENV" >> "$CLAUDE_ENV_FILE"

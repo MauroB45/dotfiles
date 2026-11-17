@@ -68,6 +68,37 @@ fi
 NOTES_DIR="$OBSIDIAN_VAULT/Work/$DIR_NAME/Reviews"
 mkdir -p "$NOTES_DIR"
 
+# The VS Code chat has no --add-dir, so grant the notes directory through the
+# worktree's local settings instead.
+allow_notes_dir() {
+  local SETTINGS="$WORKTREE/.claude/settings.local.json"
+
+  mkdir -p "$WORKTREE/.claude"
+  [[ -f "$SETTINGS" ]] || echo '{}' > "$SETTINGS"
+
+  jq --arg dir "$NOTES_DIR" \
+    '.permissions.additionalDirectories = ((.permissions.additionalDirectories // []) + [$dir] | unique)' \
+    "$SETTINGS" > "$SETTINGS.tmp"
+  mv "$SETTINGS.tmp" "$SETTINGS"
+}
+
+# Open the worktree in VS Code, then leave a shell in the worktree. Exiting
+# that shell ends the review. The prompt is sent by hand, because the
+# extension's open URI lands in the last active window, not the new one.
+open_review() {
+  local PROMPT="$1"
+
+  allow_notes_dir
+  code "$WORKTREE"
+
+  echo "In the VS Code Claude chat, run: $PROMPT"
+  echo "Type exit here when finished."
+  echo
+
+  cd "$WORKTREE"
+  "$SHELL" || true
+}
+
 offer_removal() {
   echo
   read -r -p "Remove $WORKTREE? [y/N] " REMOVE
@@ -85,8 +116,7 @@ if [[ "$DONE" == true ]]; then
     exit 1
   fi
 
-  cd "$WORKTREE"
-  claude --add-dir "$NOTES_DIR" "/review-retro $REPO $PR"
+  open_review "/review-retro $REPO $PR"
   offer_removal
   exit 0
 fi
@@ -182,9 +212,9 @@ echo
 echo "Worktree: $WORKTREE"
 echo "Review:   $REVIEW_FILE"
 echo
-echo "When the review is finished: /review-retro $REPO $PR, then quit"
+echo "When the review is finished: /review-retro $REPO $PR, then exit"
 echo "To finish later instead:      review-pr --done $REPO $PR"
 echo
 
-claude --add-dir "$NOTES_DIR" "/review-pr"
+open_review "/review-pr"
 offer_removal

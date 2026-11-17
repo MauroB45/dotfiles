@@ -93,6 +93,11 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+command -v jq >/dev/null || {
+  echo "jq is required"
+  exit 1
+}
+
 if [[ -z "${OBSIDIAN_VAULT:-}" ]]; then
   echo "OBSIDIAN_VAULT is not configured."
   echo "Set it in ~/.zshrc.local."
@@ -222,11 +227,24 @@ echo "Ready:"
 echo "$WORKTREE_PATH"
 echo
 
+# The notes symlink resolves outside the worktree, so Claude needs the real
+# path as a working directory to read it or write to it in the sandbox. The
+# VS Code chat has no --add-dir, so grant it through the local settings.
+SETTINGS="$WORKTREE_PATH/.claude/settings.local.json"
+mkdir -p "$WORKTREE_PATH/.claude"
+[[ -f "$SETTINGS" ]] || echo '{}' > "$SETTINGS"
+
+jq --arg dir "$NOTES_DIR" \
+  '.permissions.additionalDirectories = ((.permissions.additionalDirectories // []) + [$dir] | unique)' \
+  "$SETTINGS" > "$SETTINGS.tmp"
+mv "$SETTINGS.tmp" "$SETTINGS"
+
 code .
 
-# The notes symlink resolves outside the worktree, so Claude needs the real
-# path as a working directory to read it or write to it in the sandbox.
-claude --add-dir "$NOTES_DIR" || true
+echo "Claude is in the VS Code chat. Type exit here when finished."
+echo
+
+"$SHELL" || true
 
 # Removing the worktree you are standing in fails, so only offer it when
 # new-task was run from another checkout.

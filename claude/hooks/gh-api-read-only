@@ -1,0 +1,86 @@
+#!/usr/bin/env -S python3 -I
+
+# gh runs outside the sandbox and `gh api` turns into a write as soon as it is
+# given -f, -F, -X or --input, so an allow rule on the command prefix also
+# approves posting comments or deleting branches. Approve a Bash call only when
+# it is a single `gh api` GET built from an allow-list of flags, and leave
+# everything else to the normal permission prompt.
+
+import json
+import re
+import shlex
+import sys
+
+FLAGS_WITH_VALUE = {"--jq", "-q", "--template", "-t", "--cache", "-H", "--header"}
+FLAGS_WITHOUT_VALUE = {"--paginate", "--slurp", "-i", "--include", "--silent"}
+ENDPOINT = re.compile(r"^/?[A-Za-z0-9._~/{}:@%+,=-]+(\?[A-Za-z0-9._~/{}:@%+,=&-]*)?$")
+
+
+def is_read_only(command):
+    # Shell expansion still runs inside double quotes, which shlex can't tell
+    # apart from single quotes.
+    if "\n" in command or "$" in command or "`" in command:
+        return False
+
+    lexer = shlex.shlex(command, posix=True, punctuation_chars=True)
+    lexer.whitespace_split = True
+    try:
+        tokens = list(lexer)
+    except ValueError:
+        return False
+
+    if tokens[:2] != ["gh", "api"]:
+        return False
+    if any(token and set(token) <= set(lexer.punctuation_chars) for token in tokens):
+        return False
+
+    endpoints = []
+    args = iter(tokens[2:])
+    for arg in args:
+        if not arg.startswith("-"):
+            endpoints.append(arg)
+            continue
+        flag, has_inline_value, value = arg.partition("=")
+        if flag in FLAGS_WITHOUT_VALUE and not has_inline_value:
+            continue
+        if flag not in FLAGS_WITH_VALUE:
+            return False
+        if not has_inline_value:
+            value = next(args, None)
+            if value is None:
+                return False
+        if flag in {"-H", "--header"} and not value.lower().startswith("accept:"):
+            return False
+
+    if len(endpoints) != 1:
+        return False
+    endpoint = endpoints[0]
+    if "//" in endpoint or not ENDPOINT.match(endpoint):
+        return False
+    return endpoint.lstrip("/").split("/")[0] != "graphql"
+
+
+def main():
+    try:
+        event = json.load(sys.stdin)
+    except ValueError:
+        return
+    if event.get("tool_name") != "Bash":
+        return
+    command = str(event.get("tool_input", {}).get("command", "")).strip()
+    if not is_read_only(command):
+        return
+
+    json.dump(
+        {
+            "hookSpecificOutput": {
+                "hookEventName": "PreToolUse",
+                "permissionDecision": "allow",
+                "permissionDecisionReason": "read-only gh api GET",
+            }
+        },
+        sys.stdout,
+    )
+
+
+main()

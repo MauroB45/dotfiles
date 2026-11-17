@@ -33,8 +33,8 @@ What the ticket delivers, end to end.
 
 ## Acceptance criteria
 
-- [ ] Observable criterion
-- [ ] Observable criterion
+- Observable criterion
+- Observable criterion
 ```
 
 Avoid file paths, code snippets and implementation recipes; those belong in

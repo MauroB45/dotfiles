@@ -1,5 +1,16 @@
 {
   "theme": "dark",
+  "skillOverrides": {
+    "anthropic-skills:docs": "off",
+    "anthropic-skills:docx": "off",
+    "anthropic-skills:pdf": "off",
+    "anthropic-skills:pptx": "off",
+    "anthropic-skills:xlsx": "off",
+    "anthropic-skills:google-workspace": "off",
+    "anthropic-skills:morning": "off",
+    "anthropic-skills:import-memory": "off",
+    "anthropic-skills:skill-creator": "off"
+  },
   "permissions": {
     "allow": [
       "Bash(gh api:*)",
@@ -11,7 +22,23 @@
       "Bash(git push:*)",
       "Bash(gh pr review:*)",
       "Bash(gh pr comment:*)",
+      "Bash(gh pr merge:*)",
+      "Bash(gh pr create:*)", 
+      "Bash(gh pr edit:*)", 
+      "Bash(gh pr comment:*)", 
       "Bash(gh pr merge:*)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.dotfiles/claude/hooks/fnm-session-start"
+          }
+        ]
+      }
     ]
   },
   "sandbox": {
