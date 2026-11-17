@@ -192,6 +192,10 @@ if [[ ! -f "$NOTES_DIR/spec.md" ]]; then
 
 TODO: Add Jira URL
 
+## Project doc
+
+TODO: Add project doc link, if the ticket belongs to one
+
 ## Specification
 
 Paste the frozen Jira ticket here.
