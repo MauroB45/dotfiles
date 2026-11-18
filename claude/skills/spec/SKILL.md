@@ -1,6 +1,6 @@
 ---
 name: spec
-description: Turn the understood problem into a frozen behavioural specification.
+description: Specify the work's behaviour, as proposed edits to its Jira ticket or a local spec.md for work without one.
 disable-model-invocation: true
 ---
 
@@ -21,6 +21,17 @@ Use project domain terminology.
 Treat confirmed product requirements as authoritative.
 
 If important context is missing or ambiguous, ask questions before freezing the specification. Do not invent requirements.
+
+## Source
+
+- **Jira-backed:** the branch is `{ticket}/{detail}`, or the user names a
+  ticket. Read its description, acceptance criteria and comments. Comments
+  are context, not requirements, until the user confirms them. Jira stays
+  the source of truth.
+- **Local:** no ticket. The specification lives in `spec.md`.
+
+If the ticket cannot be read, stop and say so. Do not fall back to a local
+`spec.md`.
 
 ## Synthesis
 
@@ -57,11 +68,34 @@ Do not prescribe:
 
 Technical constraints that materially define behaviour may be included.
 
-## Output
+## Output: Jira-backed
+
+Do not write `spec.md`.
+
+1. Compare the synthesis with the ticket. Show one numbered table and stop:
+
+   | # | Section | Current text | Proposed edit |
+   | - | ------- | ------------ | ------------- |
+
+   Quote the current text exactly, or write `None` for an addition. Keep
+   each edit to the sentences that change. If nothing needs to change, say
+   so and stop.
+2. Wait for the user's reply: `all`, `none`, or row numbers. Anything else:
+   ask again.
+3. Apply only the confirmed rows with the Atlassian tools. Keep the
+   description's existing format (fetch as HTML when it holds panels,
+   mentions or media). Jira text: Australian English, no em dashes, no
+   attribution.
+4. Report the edited ticket's key and link, and any confirmed row that
+   failed.
+
+If a `spec.md` already exists in the notes directory, say that `/plan` and
+`/implement` read it before Jira, and ask what to do with it. Do not delete
+it.
+
+## Output: local
 
 Write to: `spec.md` in the notes directory
-
-Preserve any existing `## Jira` section at the top of the file.
 
 Use:
 
@@ -102,7 +136,7 @@ Only questions that genuinely prevent this specification from being considered s
 
 ## Freeze
 
-Once approved or sufficiently established, treat `spec.md` as frozen.
+Once approved or sufficiently established, treat the specification as frozen, whether it lives in Jira or `spec.md`.
 
 Planning must not silently rewrite it to match implementation decisions.
 
