@@ -28,7 +28,7 @@ Avoid unrelated refactors, speculative abstractions, and new dependencies unless
 
 ## Tests
 
-Use the test seams confirmed during `/plan`.
+Use the test seams confirmed during `/plan`, or agree them with the steps when there is no plan.
 
 Prefer observable behaviour over implementation details, existing project test patterns, the highest practical seam, regression tests for bug fixes, and focused assertions over broad snapshots.
 
