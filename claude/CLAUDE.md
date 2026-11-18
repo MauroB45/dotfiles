@@ -50,7 +50,8 @@ Break these when:
 notes directory with `--add-dir`, so it is listed as an additional working
 directory. Resolve it from there rather than assuming a path.
 
-- for a ticket it holds `spec.md`, `plan.md` and `session.md`
+- for a ticket it holds `plan.md`, plus `spec.md` and `session.md` when
+  created
 - for a pull request review it holds the repository's `review-log.md` and
   `review-lessons.md`
 - it lives outside the repository and is never committed

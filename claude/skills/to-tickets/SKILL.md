@@ -9,7 +9,7 @@ Break the current conversation, spec or plan into small, independently deliverab
 
 Read:
 
-- `spec.md` in the notes directory
+- `spec.md` in the notes directory, if present
 - current conversation and investigation context
 - relevant project context
 - `CLAUDE.md`

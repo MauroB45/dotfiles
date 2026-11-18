@@ -1,25 +1,39 @@
 ---
 name: plan
-description: Turn a frozen specification into an implementation-ready technical plan, or recommend decomposition when the work is too large for one coherent implementation unit.
+description: Turn the work's requirements into an implementation-ready technical plan, or recommend decomposition when the work is too large for one coherent implementation unit.
 disable-model-invocation: true
 ---
 
-Create an implementation-ready technical plan from the frozen specification. Do not modify source code.
+Create an implementation-ready technical plan from the requirements. Do not modify source code.
 
 ## Context
 
 Read:
 
-- `spec.md` in the notes directory
+- the requirements (see **Requirements source**)
 - relevant documentation and ADRs
 
-Treat `spec.md` as the source of truth.
+## Requirements source
+
+Requirements come from one source, which is the source of truth:
+
+- `spec.md` in the notes directory, if present and filled in. A file still
+  holding "Paste the frozen Jira ticket here." counts as absent.
+- otherwise the Jira ticket, keyed from the branch name (`{ticket}/{detail}`):
+  its description, acceptance criteria and comments. Comments are context,
+  not requirements, until the user confirms them.
+
+If neither is available, stop and say which source failed. Do not plan from
+memory or a stale copy.
+
+If the conversation has not settled whether the ticket's epic has a project
+doc, ask as `/investigate` does.
 
 ## Validate understanding
 
 Build on the investigation rather than repeating it. Confirm only what planning depends on:
 
-- the specification still matches the current codebase
+- the requirements still match the current codebase
 - affected contracts, state, APIs, types and boundaries
 - relevant existing tests
 - technical risks and regressions
@@ -144,7 +158,7 @@ Reiterate adjacent work that must not leak into implementation.
 
 ## Completion
 
-Check every requirement in `spec.md`.
+Check every requirement in the requirements source.
 
 Each requirement must be accounted for by:
 

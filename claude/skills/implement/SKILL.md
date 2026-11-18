@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Implement
 
-Read `spec.md` and `plan.md` from the notes directory, and relevant code.
+Read the requirements, `plan.md` from the notes directory, and relevant code. Take the requirements from the same source `/plan` uses: a filled-in `spec.md` in the notes directory, otherwise the Jira ticket keyed from the branch name. If neither is available, stop and say which source failed.
 
 Implement the approved plan. Keep changes focused and follow existing project patterns.
 
@@ -22,7 +22,7 @@ For each step:
 - mark completed items in `plan.md` when it exists
 - run focused validation where useful
 
-If the plan is materially wrong, conflicts with the spec, or requires a significant change of direction, stop and explain rather than silently deviating.
+If the plan is materially wrong, conflicts with the requirements, or requires a significant change of direction, stop and explain rather than silently deviating.
 
 Avoid unrelated refactors, speculative abstractions, and new dependencies unless explicitly approved.
 
@@ -49,7 +49,7 @@ Do not hide failures; distinguish introduced failures from existing ones.
 
 ## Complete
 
-Review the diff against `spec.md` and `plan.md`.
+Review the diff against the requirements and `plan.md`.
 
 Report:
 

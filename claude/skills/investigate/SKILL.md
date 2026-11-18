@@ -10,6 +10,12 @@ Investigate and grill (read /grilling) to get to a common understanding with no 
 
 Read the ticket, conversation, `CLAUDE.md`, relevant docs/ADRs, code and tests.
 
+If the Jira ticket has a parent epic, name the epic and ask the user whether
+it has a project doc. They can give its link, ask you to search for a doc
+whose Goal lists the epic, or say there is none. When there is a doc, read
+its confirmed decisions as constraints, and raise any conflict with the
+ticket rather than choosing.
+
 Determine:
 
 - current vs expected behaviour

@@ -188,38 +188,6 @@ if [[ "$REPO_ROOT" != "$WORKTREE_PATH" ]]; then
   fi
 fi
 
-# Create ticket notes
-if [[ ! -f "$NOTES_DIR/spec.md" ]]; then
-  cat > "$NOTES_DIR/spec.md" <<EOF
-# $TICKET
-
-## Jira
-
-TODO: Add Jira URL
-
-## Project doc
-
-TODO: Add project doc link, if the ticket belongs to one
-
-## Specification
-
-Paste the frozen Jira ticket here.
-EOF
-
-  echo "✓ Created spec.md"
-fi
-
-if [[ ! -f "$NOTES_DIR/session.md" ]]; then
-  cat > "$NOTES_DIR/session.md" <<EOF
-# $TICKET — Session
-
-## Notes
-
-EOF
-
-  echo "✓ Created session.md"
-fi
-
 cd "$WORKTREE_PATH"
 
 echo
