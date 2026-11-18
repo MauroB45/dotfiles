@@ -65,7 +65,7 @@ if [[ -z "${OBSIDIAN_VAULT:-}" ]]; then
 fi
 
 # What outlives a review is the retro entry in the repository's review log.
-NOTES_DIR="$OBSIDIAN_VAULT/Work/$DIR_NAME/Reviews"
+NOTES_DIR="$OBSIDIAN_VAULT/Work/repos/$DIR_NAME/Reviews"
 mkdir -p "$NOTES_DIR"
 
 # The VS Code chat has no --add-dir, so grant the notes directory through the

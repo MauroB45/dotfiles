@@ -72,7 +72,7 @@ directory. Resolve it from there rather than assuming a path.
 - Save to memory only when I ask, or after asking and hearing that no other
   home fits.
 - Business rules never go to memory. Propose them for the repository's
-  `domain.md` at `$OBSIDIAN_VAULT/Work/<repo>/domain.md`, and write them
+  `domain.md` at `$OBSIDIAN_VAULT/Work/repos/<repo>/domain.md`, and write them
   once I agree.
 
 ## Git
