@@ -13,7 +13,6 @@
   },
   "permissions": {
     "allow": [
-      "Bash(gh api:*)",
       "Bash(gh pr view:*)",
       "Bash(gh pr diff:*)",
       "Bash(gh pr checkout:*)"
@@ -27,9 +26,23 @@
       "Bash(gh pr edit:*)", 
       "Bash(gh pr comment:*)", 
       "Bash(gh pr merge:*)"
+    ],
+    "deny": [
+      "Bash(git commit:*)"
     ]
   },
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.dotfiles/claude/hooks/gh-api-read-only"
+          }
+        ]
+      }
+    ],
     "SessionStart": [
       {
         "hooks": [

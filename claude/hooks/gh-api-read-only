@@ -3,8 +3,12 @@
 # gh runs outside the sandbox and `gh api` turns into a write as soon as it is
 # given -f, -F, -X or --input, so an allow rule on the command prefix also
 # approves posting comments or deleting branches. Approve a Bash call only when
-# it is a single `gh api` GET built from an allow-list of flags, and leave
-# everything else to the normal permission prompt.
+# it is a single `gh api` GET built from an allow-list of flags.
+#
+# In auto mode, a call this hook does not approve goes to the classifier rather
+# than to a prompt, so a write would still run. Deny any `gh api` call that
+# shows a write signal; GitHub writes are for the user to run. Leave everything
+# else to the normal permission flow.
 
 import json
 import re
@@ -60,6 +64,71 @@ def is_read_only(command):
     return endpoint.lstrip("/").split("/")[0] != "graphql"
 
 
+FIELD_FLAGS = {"-f", "-F", "--field", "--raw-field"}
+
+
+def is_write(command):
+    # Looser than is_read_only on purpose: it must catch writes inside compound
+    # commands, and a read that matches by mistake is only refused, not run.
+    lexer = shlex.shlex(command, posix=True, punctuation_chars=True)
+    lexer.whitespace_split = True
+    try:
+        tokens = list(lexer)
+    except ValueError:
+        tokens = command.split()
+
+    segment = []
+    for token in tokens + [";"]:
+        if token and set(token) <= set(lexer.punctuation_chars):
+            if segment_writes(segment):
+                return True
+            segment = []
+        else:
+            segment.append(token)
+    return False
+
+
+def segment_writes(tokens):
+    for i in range(len(tokens) - 1):
+        if tokens[i].endswith("gh") and tokens[i + 1] == "api":
+            return args_write(tokens[i + 2 :])
+    return False
+
+
+def args_write(args):
+    args = iter(args)
+    for arg in args:
+        flag, has_inline_value, value = arg.partition("=")
+        if flag in {"-X", "--method"}:
+            method = value if has_inline_value else next(args, "")
+        elif arg.startswith("-X"):
+            method = arg[2:]
+        else:
+            method = "GET"
+        if method.upper() != "GET":
+            return True
+        if flag in FIELD_FLAGS or arg[:2] in {"-f", "-F"} and not arg.startswith("--"):
+            return True
+        if flag == "--input":
+            return True
+        if arg.lstrip("/").split("/")[0] == "graphql":
+            return True
+    return False
+
+
+def deny(reason):
+    json.dump(
+        {
+            "hookSpecificOutput": {
+                "hookEventName": "PreToolUse",
+                "permissionDecision": "deny",
+                "permissionDecisionReason": reason,
+            }
+        },
+        sys.stdout,
+    )
+
+
 def main():
     try:
         event = json.load(sys.stdin)
@@ -68,6 +137,9 @@ def main():
     if event.get("tool_name") != "Bash":
         return
     command = str(event.get("tool_input", {}).get("command", "")).strip()
+    if is_write(command):
+        deny("gh api writes are for the user to run, with `! gh api ...`")
+        return
     if not is_read_only(command):
         return
 
