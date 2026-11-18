@@ -54,7 +54,10 @@ Review the diff against the requirements and `plan.md`.
 Report:
 
 - what changed
-- validation performed
+- each requirement and how it was met: implementation, test, or an agreed
+  out-of-scope decision
+- validation performed, with results
+- checks skipped or unavailable, and why
 - remaining risks or incomplete items
 
 Never run `git commit`; give me the command instead. Do not push unless explicitly requested.
