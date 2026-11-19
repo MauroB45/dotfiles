@@ -4,11 +4,16 @@ set -euo pipefail
 
 usage() {
   echo "Usage: new-task TICKET-123 [slug] [--base <branch-or-ticket>]"
+  echo "       new-task --local <slug>"
+  echo
+  echo "--local starts work without a ticket in the current checkout, with notes"
+  echo "in Work/repos/<repo>/local/<slug>. No worktree or branch is created."
   echo
   echo "Examples:"
   echo "  new-task GP-125 travel-date-ui"
   echo "  new-task GP-125 travel-date-ui --base GP-124"
   echo "  new-task GP-125 travel-date-ui --base GP-124/domain-support"
+  echo "  new-task --local quote-idea"
   exit 1
 }
 
@@ -51,11 +56,18 @@ resolve_base() {
 
 TICKET="${1:-}"
 
-if [[ -z "$TICKET" ]]; then
+if [[ -z "$TICKET" || "$TICKET" == "--help" || "$TICKET" == "-h" ]]; then
   usage
 fi
 
 shift
+
+LOCAL=false
+
+if [[ "$TICKET" == "--local" ]]; then
+  LOCAL=true
+  TICKET=""
+fi
 
 SLUG=""
 BASE_INPUT=""
@@ -93,6 +105,15 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+if [[ "$LOCAL" == true ]]; then
+  [[ -n "$SLUG" ]] || usage
+
+  if [[ -n "$BASE_INPUT" ]]; then
+    echo "--base does not apply to --local; local work has no branch."
+    exit 1
+  fi
+fi
+
 command -v jq >/dev/null || {
   echo "jq is required"
   exit 1
@@ -113,6 +134,53 @@ fi
 
 REPO_NAME="$(basename "$REPO_ROOT")"
 REPO_PARENT="$(dirname "$REPO_ROOT")"
+
+# Grant Claude a notes folder that lies outside the checkout. The notes resolve
+# outside the worktree, so Claude needs the real path as a working directory to
+# read or write them in the sandbox. The VS Code chat has no --add-dir, so
+# grant it through the local settings.
+grant_notes() {
+  local checkout="$1" dir="$2"
+  local settings="$checkout/.claude/settings.local.json"
+
+  mkdir -p "$checkout/.claude"
+  [[ -f "$settings" ]] || echo '{}' > "$settings"
+
+  jq --arg dir "$dir" \
+    '.permissions.additionalDirectories = ((.permissions.additionalDirectories // []) + [$dir] | unique)' \
+    "$settings" > "$settings.tmp"
+  mv "$settings.tmp" "$settings"
+}
+
+if [[ "$LOCAL" == true ]]; then
+  if [[ ! "$SLUG" =~ ^[a-z0-9][a-z0-9-]*$ ]]; then
+    echo "Use a lowercase slug of letters, digits and dashes: $SLUG"
+    exit 1
+  fi
+
+  LOCAL_ROOT="${OBSIDIAN_VAULT}/Work/repos/${REPO_NAME}/local"
+  NOTES_DIR="${LOCAL_ROOT}/${SLUG}"
+  mkdir -p "$NOTES_DIR"
+
+  echo "Repository: $REPO_NAME"
+  echo "Local work: $SLUG"
+  echo "Checkout:   $REPO_ROOT"
+  echo "Notes:      $NOTES_DIR"
+  echo
+
+  # Grant the whole local folder once, so later slugs need no new grant.
+  grant_notes "$REPO_ROOT" "$LOCAL_ROOT"
+
+  cd "$REPO_ROOT"
+  code .
+
+  echo "Claude is in the VS Code chat. Its notes are in $NOTES_DIR."
+  echo "Type exit here when finished."
+  echo
+
+  "$SHELL" || true
+  exit 0
+fi
 
 if [[ -n "$SLUG" ]]; then
   BRANCH="${TICKET}/${SLUG}"
@@ -195,17 +263,7 @@ echo "Ready:"
 echo "$WORKTREE_PATH"
 echo
 
-# The notes symlink resolves outside the worktree, so Claude needs the real
-# path as a working directory to read it or write to it in the sandbox. The
-# VS Code chat has no --add-dir, so grant it through the local settings.
-SETTINGS="$WORKTREE_PATH/.claude/settings.local.json"
-mkdir -p "$WORKTREE_PATH/.claude"
-[[ -f "$SETTINGS" ]] || echo '{}' > "$SETTINGS"
-
-jq --arg dir "$NOTES_DIR" \
-  '.permissions.additionalDirectories = ((.permissions.additionalDirectories // []) + [$dir] | unique)' \
-  "$SETTINGS" > "$SETTINGS.tmp"
-mv "$SETTINGS.tmp" "$SETTINGS"
+grant_notes "$WORKTREE_PATH" "$NOTES_DIR"
 
 code .
 

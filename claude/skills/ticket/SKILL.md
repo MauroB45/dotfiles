@@ -54,3 +54,17 @@ After approval, create the issue with the Atlassian tools and report its key
 and link.
 
 Do not edit, transition or link other issues.
+
+## Promote a local spec
+
+When the draft came from a local `spec.md` (in `Work/repos/<repo>/local/<slug>/`),
+Jira is now the source of truth. After creating the issue:
+
+1. In `spec.md`, add `promoted-to: <KEY>` to the frontmatter (create it if
+   missing) and put this line at the top of the body:
+   `> Promoted to [<KEY>](<link>) on <d Mon yyyy>. Jira is the source of truth; this file is history.`
+   Leave the rest of the file as it is.
+2. If `session.md` exists in that folder, set `status: done`, `updated` to
+   today and `next: Continue in <KEY> with new-task <KEY>`.
+3. Move nothing. Links to `plan.md` and `session.md` in that folder keep
+   working.

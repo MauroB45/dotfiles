@@ -9,7 +9,8 @@ Keep the authoritative requirements in step with confirmed decisions.
 
 - **Jira-backed:** the ticket from the branch (`{ticket}/{detail}`) or the
   one the user names.
-- **Local:** `spec.md` in the notes directory.
+- **Local:** `spec.md` in the notes directory, unless its frontmatter has
+  `promoted-to: <KEY>`; then that ticket is the source.
 
 ## When
 

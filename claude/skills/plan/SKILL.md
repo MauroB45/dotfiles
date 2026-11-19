@@ -18,7 +18,9 @@ Read:
 Requirements come from one source, which is the source of truth:
 
 - `spec.md` in the notes directory, if present and filled in. A file still
-  holding "Paste the frozen Jira ticket here." counts as absent.
+  holding "Paste the frozen Jira ticket here." counts as absent. A file with
+  `promoted-to: <KEY>` in its frontmatter also counts as absent; use that
+  ticket.
 - otherwise the Jira ticket, keyed from the branch name (`{ticket}/{detail}`):
   its description, acceptance criteria and comments. Comments are context,
   not requirements, until the user confirms them.
