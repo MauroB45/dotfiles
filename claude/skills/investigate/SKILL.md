@@ -8,6 +8,10 @@ disable-model-invocation: true
 
 Investigate and grill (read /grilling) to get to a common understanding with no outstanding questions. Use the grilling approach (recommendation). Do not modify code or create artifacts.
 
+If `session.md` exists in the notes directory, read it first. Say where the
+work stands and its next action, and investigate only what has changed or is
+still open. Set its `status` to `active`.
+
 Read the ticket, conversation, `CLAUDE.md`, relevant docs/ADRs, code and tests.
 
 If the Jira ticket has a parent epic, name the epic and ask the user whether

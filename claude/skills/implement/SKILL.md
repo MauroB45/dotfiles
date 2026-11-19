@@ -8,6 +8,8 @@ disable-model-invocation: true
 
 Read the requirements, `plan.md` from the notes directory, and relevant code. Take the requirements from the same source `/plan` uses: a filled-in `spec.md` in the notes directory, otherwise the Jira ticket keyed from the branch name. If neither is available, stop and say which source failed.
 
+If `session.md` exists in the notes directory, read it and continue from its next action.
+
 Implement the approved plan. Keep changes focused and follow existing project patterns.
 
 If `plan.md` is absent or empty, the work came straight from `/investigate`. Agree a short ordered set of steps with the user first, then implement those. Do not create `plan.md`.
@@ -62,6 +64,9 @@ Report:
 - checks skipped or unavailable, and why
 - requirement edits declined or deferred, and confirmation they were not implemented
 - remaining risks or incomplete items
+
+If `session.md` exists in the notes directory, set its `status` to `done`
+and `updated` to today once the last commit is in. Do not create one.
 
 Never run `git commit`; give me the command instead. Do not push unless explicitly requested.
 
