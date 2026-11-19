@@ -55,15 +55,33 @@ Do not hide failures; distinguish introduced failures from existing ones.
 
 Review the diff against the requirements and `plan.md`.
 
-Report:
+### Ticket check
+
+Fetch the ticket again (or read `spec.md` for local work) and compare it with
+the whole branch diff, not only the last commit:
+
+- each acceptance criterion: met, partly met, or missing
+- behaviour the diff adds beyond the ticket, as a Question on whether product
+  or design agreed it
+- anything in the ticket that changed since work started
+
+Resolve a mismatch through the `requirements` skill or a code change, never
+silently. If the ticket cannot be fetched, say so and do not report it as
+checked.
+
+### Report
 
 - what changed
 - each requirement and how it was met: implementation, test, or an agreed
   out-of-scope decision
+- the Ticket check result
 - validation performed, with results
 - checks skipped or unavailable, and why
 - requirement edits declined or deferred, and confirmation they were not implemented
 - remaining risks or incomplete items
+- whether `/review-branch` is worth running, and why: recommend it when the
+  work touches shared code, async flows or data writes, or spans several
+  modules; say it is not needed for a small, contained change
 
 If `session.md` exists in the notes directory, set its `status` to `done`
 and `updated` to today once the last commit is in. Do not create one.

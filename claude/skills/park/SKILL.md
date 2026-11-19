@@ -43,7 +43,8 @@ them. Omit the section when there are none.
 
 ## Verification
 
-What was run, with results, and what is still unchecked.
+What was run, with results, and what is still unchecked. Open
+`/review-branch` findings not yet acted on, by number and one line each.
 ```
 
 Keep each section to a few lines. Link to `plan.md`, `spec.md` or

@@ -36,6 +36,7 @@ mkdir -p "$HOME/.claude"
 
 link "$DOTFILES/claude/CLAUDE.md" "$HOME/.claude/CLAUDE.md"
 link "$DOTFILES/claude/skills" "$HOME/.claude/skills"
+link "$DOTFILES/claude/agents" "$HOME/.claude/agents"
 link "$DOTFILES/claude/mods" "$HOME/.claude/mods"
 link "$DOTFILES/claude/settings.json" "$HOME/.claude/settings.json"
 
