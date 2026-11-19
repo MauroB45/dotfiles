@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+
+# List in-flight work: each task worktree made by new-task, and local work in
+# the vault, with the stage, status and next action from its session.md
+# checkpoint. Reads Git and files only; no network calls.
+
+set -euo pipefail
+
+if [[ -z "${OBSIDIAN_VAULT:-}" ]]; then
+  echo "OBSIDIAN_VAULT is not configured."
+  echo "Set it in ~/.zshrc.local."
+  exit 1
+fi
+
+ROOT="${CODE_ROOT:-$HOME/Code/work}"
+REPOS_NOTES="${OBSIDIAN_VAULT}/Work/repos"
+
+# Print one frontmatter field from a session.md, without trailing comments.
+field() {
+  local file="$1" key="$2"
+  [[ -f "$file" ]] || { echo "-"; return; }
+  awk -v key="$key" '
+    NR == 1 && $0 != "---" { exit }
+    NR > 1 && $0 == "---" { exit }
+    index($0, key ":") == 1 {
+      value = substr($0, length(key) + 2)
+      sub(/[ \t]+#.*$/, "", value)
+      gsub(/^[ \t]+|[ \t]+$/, "", value)
+      print value
+      found = 1
+      exit
+    }
+    END { if (!found) print "-" }
+  ' "$file"
+}
+
+rank() {
+  case "$1" in
+    active) echo 1 ;;
+    blocked) echo 2 ;;
+    parked) echo 3 ;;
+    -) echo 4 ;;
+    done) echo 5 ;;
+    *) echo 4 ;;
+  esac
+}
+
+shorten() {
+  local text="$1" max=60
+  if (( ${#text} > max )); then
+    echo "${text:0:max-1}…"
+  else
+    echo "$text"
+  fi
+}
+
+rows=""
+
+add_row() {
+  local repo="$1" item="$2" session="$3" changes="$4" commit="$5"
+  local status
+  status="$(field "$session" status)"
+  rows+="$(rank "$status")"$'\t'"$repo"$'\t'"$item"$'\t'"$(field "$session" stage)"$'\t'"$status"$'\t'"$(shorten "$(field "$session" next)")"$'\t'"$(field "$session" updated)"$'\t'"$changes"$'\t'"$commit"$'\n'
+}
+
+for worktree_root in "$ROOT"/*-worktrees; do
+  [[ -d "$worktree_root" ]] || continue
+  repo="$(basename "$worktree_root" -worktrees)"
+  repo_path="$ROOT/$repo"
+  git -C "$repo_path" rev-parse --git-dir >/dev/null 2>&1 || continue
+
+  # Only worktrees Git still knows about; a removed one can leave its folder.
+  path=""
+  while IFS= read -r line; do
+    case "$line" in
+      "worktree "*) path="${line#worktree }" ;;
+      "branch "*)
+        [[ "$path" == "$worktree_root"/* ]] || continue
+        branch="${line#branch refs/heads/}"
+        ticket="${branch%%/*}"
+        changes="$(git --no-optional-locks -C "$path" status --porcelain 2>/dev/null | wc -l | tr -d ' ')"
+        commit="$(git -C "$path" log -1 --format=%cr 2>/dev/null || echo -)"
+        add_row "$repo" "$branch" "$REPOS_NOTES/$repo/$ticket/session.md" "$changes" "$commit"
+        ;;
+    esac
+  done < <(git -C "$repo_path" worktree list --porcelain)
+done
+
+for session in "$REPOS_NOTES"/*/local/*/session.md; do
+  [[ -f "$session" ]] || continue
+  [[ "$(field "$session" status)" == "done" ]] && continue
+  slug_dir="$(dirname "$session")"
+  repo="$(basename "$(dirname "$(dirname "$slug_dir")")")"
+  add_row "$repo" "local/$(basename "$slug_dir")" "$session" "-" "-"
+done
+
+if [[ -z "$rows" ]]; then
+  echo "No in-flight work found under $ROOT or $REPOS_NOTES/*/local."
+  exit 0
+fi
+
+{
+  printf 'REPO\tWORK\tSTAGE\tSTATUS\tNEXT\tUPDATED\tCHANGES\tLAST COMMIT\n'
+  printf '%s' "$rows" | sort -t $'\t' -k1,1n -k7,7r | cut -f2-
+} | column -t -s $'\t'

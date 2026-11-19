@@ -29,6 +29,7 @@ link "$DOTFILES/starship/starship.toml" "$HOME/.config/starship.toml"
 link "$DOTFILES/scripts/new-task" "$HOME/.local/bin/new-task"
 link "$DOTFILES/scripts/review-pr" "$HOME/.local/bin/review-pr"
 link "$DOTFILES/scripts/prs" "$HOME/.local/bin/prs"
+link "$DOTFILES/scripts/tasks" "$HOME/.local/bin/tasks"
 
 # Claude Code
 mkdir -p "$HOME/.claude"

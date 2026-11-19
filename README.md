@@ -57,7 +57,9 @@ export REPO_ALIASES="geppetto-sender-ui=sender-ui"
 
 `new-task` and `review-pr` open the worktree in VS Code and run Claude in its chat. When the vault is under `~/Documents`, give Visual Studio Code access to the Documents folder in **System Settings → Privacy & Security → Files and Folders**, or macOS blocks the chat from reading the notes.
 
-`CODE_ROOT` is where repositories are cloned. Only `review-pr` uses it, to find the clone for a pull request, and it defaults to `~/Code/work`.
+`CODE_ROOT` is where repositories are cloned, and it defaults to `~/Code/work`. `review-pr` uses it to find the clone for a pull request, and `tasks` to find task worktrees.
+
+`tasks` lists in-flight work in one table: each task worktree with its uncommitted changes and last commit, plus local work in the vault, with the stage, status and next action from each `session.md` checkpoint. It reads Git and files only.
 
 `REPO_ALIASES` maps a GitHub repository to the directory it is cloned into, as a space-separated list of `github-name=local-directory` pairs. `review-pr` is given a GitHub repository name, so it needs the mapping to find a clone whose directory is named differently. The local directory name is also the vault folder, which keeps a project's tickets and review log together.
 
