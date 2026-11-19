@@ -72,22 +72,9 @@ Technical constraints that materially define behaviour may be included.
 
 Do not write `spec.md`.
 
-1. Compare the synthesis with the ticket. Show one numbered table and stop:
-
-   | # | Section | Current text | Proposed edit |
-   | - | ------- | ------------ | ------------- |
-
-   Quote the current text exactly, or write `None` for an addition. Keep
-   each edit to the sentences that change. If nothing needs to change, say
-   so and stop.
-2. Wait for the user's reply: `all`, `none`, or row numbers. Anything else:
-   ask again.
-3. Apply only the confirmed rows with the Atlassian tools. Keep the
-   description's existing format (fetch as HTML when it holds panels,
-   mentions or media). Jira text: Australian English, no em dashes, no
-   attribution.
-4. Report the edited ticket's key and link, and any confirmed row that
-   failed.
+Compare the synthesis with the ticket. If nothing needs to change, say so
+and stop. Otherwise propose, apply and record the edits with the
+`requirements` skill.
 
 If a `spec.md` already exists in the notes directory, say that `/plan` and
 `/implement` read it before Jira, and ask what to do with it. Do not delete

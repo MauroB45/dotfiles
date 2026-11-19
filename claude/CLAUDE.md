@@ -65,6 +65,12 @@ directory. Resolve it from there rather than assuming a path.
 - Never hide, ignore, or work around failing validation without explaining why.
 - Distinguish failures introduced by your changes from pre-existing failures.
 
+## Requirements
+
+A Jira ticket is the source of truth for its requirements; local work without
+one uses `spec.md` in the notes directory. When I confirm a decision that
+changes behaviour, scope or acceptance criteria, use the `requirements` skill.
+
 ## Memory
 
 - Avoid memory. When something seems worth keeping, first look for a home

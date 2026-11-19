@@ -38,6 +38,9 @@ Build on the investigation rather than repeating it. Confirm only what planning 
 - relevant existing tests
 - technical risks and regressions
 
+When the user confirms a decision that changes behaviour, scope or
+acceptance criteria, use the `requirements` skill before planning on it.
+
 `/spec` owns scope assessment. If planning exposes that the work is genuinely several independently deliverable behaviours, stop before writing `plan.md`, explain why, and recommend `/to-tickets`.
 
 ## Testing strategy

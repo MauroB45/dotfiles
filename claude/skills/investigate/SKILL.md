@@ -30,6 +30,10 @@ Find facts from the codebase yourself. Ask the user only about decisions, requir
 
 Do not plan or implement.
 
+When the user confirms a decision that changes the ticket's behaviour, scope
+or acceptance criteria, use the `requirements` skill; that Jira or `spec.md`
+edit is the one exception to creating no artifacts.
+
 ## Investigation complete.
 
 Recommend the appropriate next step:

@@ -24,6 +24,8 @@ For each step:
 
 If the plan is materially wrong, conflicts with the requirements, or requires a significant change of direction, stop and explain rather than silently deviating.
 
+When the user confirms a decision that changes behaviour, scope or acceptance criteria, use the `requirements` skill before implementing it.
+
 Avoid unrelated refactors, speculative abstractions, and new dependencies unless explicitly approved.
 
 ## Tests
@@ -58,6 +60,7 @@ Report:
   out-of-scope decision
 - validation performed, with results
 - checks skipped or unavailable, and why
+- requirement edits declined or deferred, and confirmation they were not implemented
 - remaining risks or incomplete items
 
 Never run `git commit`; give me the command instead. Do not push unless explicitly requested.
