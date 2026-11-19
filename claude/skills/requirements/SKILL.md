@@ -20,6 +20,14 @@ not a confirmed decision.
 Technical decisions that leave agreed behaviour unchanged stay in `plan.md`
 or the conversation. Do not propose them.
 
+## Project decisions
+
+If the ticket's epic has a project doc (as settled in `/investigate`) and the
+decision affects other tickets in it, do not edit only this ticket. Say which
+tickets it touches and recommend `/project decide`, which records it in the
+doc first and then proposes the edits across tickets. Edit this ticket alone
+only if the user says the decision is local to it.
+
 ## Propose
 
 Show one numbered table and stop:
